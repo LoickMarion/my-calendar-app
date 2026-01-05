@@ -46,9 +46,7 @@ export default function TaskList({ tasks = [], dateKey }) {
 
                   const line =
                     detail ||
-                    (t.title && t.title.toString().trim() !== gk
-                      ? t.title
-                      : '(no details)');
+                    (t.description && t.description.toString().trim()) || '(no text)';
 
                   // Deterministic ID: dateKey + groupTitle + index
                   const id = `${dateKey}__${gk}__${i}`;

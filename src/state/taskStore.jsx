@@ -29,6 +29,34 @@ export function TaskProvider({ children }) {
     });
   }
 
+  function addTask(dateKey, task) {
+    setTasks((prev) => {
+      const arr = prev[dateKey] || [];
+      const index = arr.length;
+
+      const category =
+        (task.category && task.category.toString().trim()) ||
+        'Uncategorized';
+
+      const id = `${dateKey}__${category}__${index}`;
+
+      const newTask = {
+        id,
+        category,
+        description: task.text, // task text stored as description
+      };
+
+      return {
+        ...prev,
+        [dateKey]: [...arr, newTask],
+      };
+    });
+  }
+
+  function addCategory(cat) {
+    setEnabledCategories(prev => ({ ...prev, [cat]: true }));
+    setCategoryColor(cat, 'hsl(220 60% 60%)'); // or reuse your generator
+  }
 
 
   // Check if a task is complete
@@ -56,6 +84,8 @@ export function TaskProvider({ children }) {
 
     return out;
   }
+
+  
 
   // Persist/load category bubble colors to localStorage so user customizations survive reloads
   useEffect(() => {
@@ -286,7 +316,9 @@ export function TaskProvider({ children }) {
       isCategoryEnabled,
       setCategoryEnabled,
       toggleAllCategories,
-      importTasks
+      importTasks,
+      addTask,
+      addCategory,
     }}>
       {children}
     </TaskContext.Provider>

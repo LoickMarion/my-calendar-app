@@ -11,6 +11,8 @@ import DayView from './components/DayView';
 import CategoriesFilter from './components/CategoriesFilter';
 import ErrorBoundary from './components/ErrorBoundary';
 import BackgroundShapes from './components/BackgroundShapes';
+import AddTaskPanel from './components/AddTaskPanel';
+
 import './styles/globals.css';
 
 function AppContent() {
@@ -54,8 +56,7 @@ function AppContent() {
       <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
 
       <div className="app-layout" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-        <CategoriesFilter />
-
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> <CategoriesFilter /> <AddTaskPanel /> </div>
         <div style={{ flex: 1 }}>
           {/* Background shapes are absolute in .app-shell so they sit behind widgets */}
           <BackgroundShapes />
