@@ -1,0 +1,9 @@
+{
+  "2025-01-01": [
+    { "title": "Buy groceries", "category": "Personal" },
+    { "title": "Finish report", "category": "Work" }
+  ],
+  "2025-01-02": [
+    { "title": "Gym", "category": "Health" }
+  ]
+}
