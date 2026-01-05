@@ -1,7 +1,3 @@
-// DayView.jsx
-// Displays tasks for the currently selected date.
-// This is a placeholder UI that uses TaskList to render tasks.
-
 import React from 'react';
 import TaskList from './TaskList';
 import { useTaskStore } from '../state/taskStore.jsx';
@@ -18,11 +14,20 @@ export default function DayView() {
   }
 
   const tasks = getTasksForDate(selectedDate);
+  const dateKey = selectedDate.toISOString().slice(0, 10);
 
   return (
     <aside className="day-view">
-      <h2>{selectedDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h2>
-      <TaskList tasks={tasks} />
+      <h2>
+        {selectedDate.toLocaleDateString(undefined, {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}
+      </h2>
+
+      <TaskList tasks={tasks} dateKey={dateKey} />
     </aside>
   );
 }

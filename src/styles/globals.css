@@ -239,4 +239,11 @@ body {
 .task-list-item.completed .task-title { text-decoration: line-through; opacity: 0.7; }
 
 
-/* ⚠️ Tip: to switch to Tailwind, replace this file with Tailwind directives (@tailwind base; @tailwind components; @tailwind utilities) */
+.task-complete-x {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-weight: bold;
+}

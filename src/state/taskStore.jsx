@@ -17,6 +17,46 @@ export function TaskProvider({ children }) {
   // categoryColors stores a color string per category (e.g., 'hsl(120 60% 60%)')
   const [categoryColors, setCategoryColors] = useState({});
 
+  // --- Completion state ---
+  const [completedTasks, setCompletedTasks] = useState({});
+
+  // Toggle completion for a specific task
+  function toggleTaskComplete(dateKey, taskId) {
+    setCompletedTasks(prev => {
+      const day = prev[dateKey] || {};
+      const updated = { ...day, [taskId]: !day[taskId] };
+      return { ...prev, [dateKey]: updated };
+    });
+  }
+
+
+
+  // Check if a task is complete
+  function isTaskComplete(dateKey, taskId) {
+    return !!(completedTasks[dateKey] && completedTasks[dateKey][taskId]);
+  }
+
+
+  function addDeterministicIds(tasksObj) {
+    const out = {};
+
+    for (const dateKey of Object.keys(tasksObj)) {
+      const arr = tasksObj[dateKey] || [];
+
+      out[dateKey] = arr.map((t, index) => {
+        const category =
+          (t.category && t.category.toString().trim()) ||
+          'Uncategorized';
+
+        const id = `${dateKey}__${category}__${index}`;
+
+        return { ...t, id };
+      });
+    }
+
+    return out;
+  }
+
   // Persist/load category bubble colors to localStorage so user customizations survive reloads
   useEffect(() => {
     try {
@@ -35,21 +75,38 @@ export function TaskProvider({ children }) {
     }
   }, [categoryColors]);
 
+  // Load completion state
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("calendar_completed_tasks");
+      if (saved) setCompletedTasks(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  // Save completion state
+  useEffect(() => {
+    try {
+      localStorage.setItem("calendar_completed_tasks", JSON.stringify(completedTasks));
+    } catch {}
+  }, [completedTasks]);
+
+
   useEffect(() => {
     // loadTasks can be synchronous (returns object) or asynchronous (Promise)
     const maybe = loadTasks();
     if (maybe && typeof maybe.then === 'function') {
       // If tasks are loaded from a remote source (e.g., Google Sheet), initialize categories from that source
       maybe.then((data) => {
-        setTasks(data);
-        initializeCategories(data);
+        const withIds = addDeterministicIds(data);
+        setTasks(withIds);
+        initializeCategories(withIds);
       }).catch((err) => {
         console.error('Failed to load tasks:', err);
       });
     } else {
       // Local fallback (e.g., built-in tasks.json) should NOT populate categories by default.
       // Categories remain empty until the user imports a file or a sheet is explicitly loaded.
-      setTasks(maybe);
+      setTasks(addDeterministicIds(maybe));
     }
   }, []);
 
@@ -217,6 +274,9 @@ export function TaskProvider({ children }) {
       selectedDate,
       setSelectedDate,
       tasks,
+      completedTasks, 
+      toggleTaskComplete, 
+      isTaskComplete,
       getTasksForDate,
       getFilteredTasks,
       getCategories,

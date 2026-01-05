@@ -7,12 +7,21 @@
 
 import React from 'react';
 
-export default function CalendarTile({ date, onClick, isCurrentMonth = true, isSelected = false, taskCount = 0 }) {
+export default function CalendarTile({
+  date,
+  onClick,
+  isCurrentMonth = true,
+  isSelected = false,
+  taskCount = 0,
+  allComplete = false
+}) {
   const classes = ['calendar-tile'];
   if (!isCurrentMonth) classes.push('muted');
   if (isSelected) classes.push('selected');
 
-  const ariaLabel = `${date.toDateString()}${taskCount > 0 ? `: ${taskCount} tasks` : ''}`;
+  const ariaLabel = `${date.toDateString()}${
+    taskCount > 0 ? `: ${taskCount} incomplete tasks` : ''
+  }`;
 
   return (
     <button
@@ -22,7 +31,16 @@ export default function CalendarTile({ date, onClick, isCurrentMonth = true, isS
       aria-label={ariaLabel}
     >
       <div className="date-number">{date.getDate()}</div>
-      {taskCount > 0 && <div className="task-badge" aria-hidden>{taskCount}</div>}
+
+      {allComplete ? (
+        <div className="task-complete-x" aria-hidden>
+          ✕
+        </div>
+      ) : taskCount > 0 ? (
+        <div className="task-badge" aria-hidden>
+          {taskCount}
+        </div>
+      ) : null}
     </button>
   );
 }
