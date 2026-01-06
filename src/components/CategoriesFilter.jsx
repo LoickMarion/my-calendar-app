@@ -1,7 +1,4 @@
-// CategoriesFilter.jsx
-// Renders a list of category checkboxes with Select All / Deselect All controls, respecting mode.
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
 
 export default function CategoriesFilter({ mode = 'select' }) {
@@ -12,11 +9,14 @@ export default function CategoriesFilter({ mode = 'select' }) {
     isCategoryEnabled,
     setCategoryEnabled,
     toggleAllCategories,
-    deleteCategory, // new method
+    deleteCategory,
+    renameCategory, // new
   } = useTaskStore();
 
   const categories = getCategories();
   const counts = getCategoryCounts();
+  const [editing, setEditing] = useState(null); // currently editing category
+  const [newName, setNewName] = useState('');
 
   function getColor(cat) {
     try {
@@ -77,26 +77,56 @@ export default function CategoriesFilter({ mode = 'select' }) {
               </button>
             );
           } else if (mode === 'edit') {
-            control = (
-              <div
-                style={{
-                  background: '#eee',
-                  color: '#333',
-                  borderRadius: 4,
-                  width: 20,
-                  height: 20,
-                  fontSize: '0.8rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-                aria-label={`Edit category ${cat}`}
-                onClick={() => console.log('Edit category', cat)}
-              >
-                ✎
-              </div>
-            );
+            if (editing === cat) {
+              // show input for renaming
+              control = (
+                <input
+                  type="text"
+                  value={newName}
+                  autoFocus
+                  onChange={(e) => setNewName(e.target.value)}
+                  onBlur={() => {
+                    if (newName.trim() && newName !== cat) renameCategory(cat, newName.trim());
+                    setEditing(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      if (newName.trim() && newName !== cat) renameCategory(cat, newName.trim());
+                      setEditing(null);
+                    }
+                    if (e.key === 'Escape') {
+                      setEditing(null);
+                    }
+                  }}
+                  style={{ width: 80 }}
+                />
+              );
+            } else {
+              // pencil button to trigger input
+              control = (
+                <div
+                  style={{
+                    background: '#eee',
+                    color: '#333',
+                    borderRadius: 4,
+                    width: 20,
+                    height: 20,
+                    fontSize: '0.8rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                  aria-label={`Edit category ${cat}`}
+                  onClick={() => {
+                    setEditing(cat);
+                    setNewName(cat);
+                  }}
+                >
+                  ✎
+                </div>
+              );
+            }
           }
 
           return (

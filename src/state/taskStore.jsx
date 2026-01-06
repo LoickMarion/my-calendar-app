@@ -135,6 +135,44 @@ export function TaskProvider({ children }) {
     });
   }
 
+  function renameCategory(oldName, newName) {
+    if (!oldName || !newName || oldName === newName) return;
+
+    setTasks((prev) => {
+      const newTasks = {};
+      for (const dateKey of Object.keys(prev)) {
+        newTasks[dateKey] = (prev[dateKey] || []).map((t) => {
+          if ((t.category || 'Uncategorized') === oldName) {
+            return { ...t, category: newName };
+          }
+          return t;
+        });
+      }
+      return newTasks;
+    });
+
+    // Update category enabled state
+    setEnabledCategories((prev) => {
+      const out = { ...prev };
+      if (prev[oldName] !== undefined) {
+        out[newName] = prev[oldName];
+        delete out[oldName];
+      }
+      return out;
+    });
+
+    // Update category color
+    setCategoryColors((prev) => {
+      const out = { ...prev };
+      if (prev[oldName] !== undefined) {
+        out[newName] = prev[oldName];
+        delete out[oldName];
+      }
+      return out;
+    });
+  }
+
+
 
 
   // Check if a task is complete
@@ -425,6 +463,7 @@ export function TaskProvider({ children }) {
       editTask, 
       addCategory,
       deleteCategory,
+      renameCategory,
       tasksToCSV,
       escapeCSV,
     }}>
