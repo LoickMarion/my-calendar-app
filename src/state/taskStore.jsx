@@ -54,11 +54,21 @@ export function TaskProvider({ children }) {
   }
 
   function deleteTask(dateKey, taskId) {
+    const [idDate, category, indexStr] = taskId.split('__');
+    const index = parseInt(indexStr, 10);
+
     setTasks(prev => {
-      const day = prev[dateKey] || [];
-      const filtered = day.filter(t => t.id !== taskId);
+      const arr = prev[dateKey] || [];
+      const categoryTasks = arr.filter(t => t.category === category);
+      const taskToDelete = categoryTasks[index];
+
+      if (!taskToDelete) return prev;
+
+      const filtered = arr.filter(t => t !== taskToDelete);
+
       return { ...prev, [dateKey]: filtered };
     });
+
     setCompletedTasks(prev => {
       if (!prev[dateKey]) return prev;
       const updated = { ...prev[dateKey] };

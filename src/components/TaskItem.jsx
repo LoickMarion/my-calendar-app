@@ -4,8 +4,8 @@
 import React from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
 
-export default function TaskItem({ id, text, dateKey, mode = 'select', onDelete }) {
-  const { toggleTaskComplete, isTaskComplete } = useTaskStore();
+export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
+  const { toggleTaskComplete, isTaskComplete, deleteTask } = useTaskStore();
 
   const checked = isTaskComplete(dateKey, id);
 
@@ -26,7 +26,7 @@ export default function TaskItem({ id, text, dateKey, mode = 'select', onDelete 
     actionBox = (
       <button
         type="button"
-        onClick={onDelete}
+        onClick={() => deleteTask(dateKey, id)}
         className="task-action-delete"
         aria-label={`Delete ${text}`}
       >

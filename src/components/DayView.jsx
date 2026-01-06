@@ -1,20 +1,14 @@
 import React from 'react';
-import TaskList from './TaskList';
 import { useTaskStore } from '../state/taskStore.jsx';
+import TaskList from './TaskList.jsx';
 
 export default function DayView({ mode = 'select' }) {
   const { selectedDate, getTasksForDate } = useTaskStore();
 
-  if (!selectedDate) {
-    return (
-      <aside className="day-view">
-        <p>Select a date to view tasks.</p>
-      </aside>
-    );
-  }
+  if (!selectedDate) return <p>Please select a date.</p>;
 
-  const tasks = getTasksForDate(selectedDate);
   const dateKey = selectedDate.toISOString().slice(0, 10);
+  const tasks = getTasksForDate(selectedDate);
 
   return (
     <aside className="day-view">
