@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
 
-export default function AddTaskPanel() {
+export default function AddTaskPanel({ className = "" }) {
   const {
     getCategories,
     addTask,
@@ -98,7 +98,7 @@ export default function AddTaskPanel() {
   }
 
   return (
-    <aside className="add-task-panel" style={{ marginTop: '1rem' }}>
+    <aside className={`add-task-panel-root ${className}`} style={{ marginTop: '1rem' }}>
       <h3 style={{ marginBottom: '0.5rem' }}>Add Task</h3>
 
       <form
@@ -163,16 +163,20 @@ export default function AddTaskPanel() {
           />
         </div>
 
-        {/* Submit */}
-        <button type="submit" disabled={!text.trim() || !date}>
-          Add Task
+        <button
+            type="submit"
+            className="add-task-button"
+            disabled={!text.trim() || !date}
+            >
+            Add Task
         </button>
+
       </form>
-      
+
       <button
         type="button"
         onClick={handleDownloadCSV}
-        style={{ marginTop: '1rem' }}
+        className="download-csv-button"
       >
         Download Tasks CSV
       </button>

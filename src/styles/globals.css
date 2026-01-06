@@ -247,3 +247,36 @@ body {
   color: var(--accent);
   font-weight: bold;
 }
+
+.delete-mode-toggle,
+.add-task-panel-root input,
+.add-task-panel-root select,
+.add-task-panel-root textarea,
+.download-csv-button,
+.add-task-button { 
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: left;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  min-width: 78px;
+ }
+
+ .add-task-button:disabled { 
+  opacity: 0.5; 
+  cursor: not-allowed; 
+}
+
+.delete-mode-toggle:hover {
+  opacity: 0.9;
+}
+
+.delete-mode-toggle.delete-mode-active {
+  background-color: red; 
+}

@@ -1,10 +1,11 @@
 // App.jsx
-// Root app component: wires navigation, calendar and day view together.
-// Uses TaskProvider to access selected date and tasks.
+// Root app component: wires navigation, calendar, categories, add-task panel,
+// and day view together. Now includes global deleteMode state.
 
 import React, { useState } from 'react';
 import { TaskProvider, useTaskStore } from './state/taskStore.jsx';
 import { ThemeProvider } from './state/themeStore.jsx';
+
 import NavigationBar from './components/NavigationBar';
 import CalendarGrid from './components/CalendarGrid';
 import DayView from './components/DayView';
@@ -16,11 +17,14 @@ import AddTaskPanel from './components/AddTaskPanel';
 import './styles/globals.css';
 
 function AppContent() {
-  // Keep month/year at top-level so NavigationBar + CalendarGrid can interact.
+  // Month/year navigation state
   const [current, setCurrent] = useState(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
   });
+
+  // Global delete mode
+  const [deleteMode, setDeleteMode] = useState(false);
 
   const { setSelectedDate, selectedDate, getFilteredTasks } = useTaskStore();
 
@@ -55,10 +59,28 @@ function AppContent() {
     <div className="app-shell">
       <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
 
-      <div className="app-layout" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> <CategoriesFilter /> <AddTaskPanel /> </div>
+      {/* Delete Mode Toggle */}
+      <div style={{ padding: '0.5rem 0' }}>
+        <button
+          onClick={() => setDeleteMode(!deleteMode)}
+          className={`delete-mode-toggle ${deleteMode ? "delete-mode-active" : ""}`}
+        >
+          {deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
+        </button>
+      </div>
+
+      <div
+        className="app-layout"
+        style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
+      >
+        {/* Left column: categories + add task */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <CategoriesFilter deleteMode={deleteMode} />
+          <AddTaskPanel className="add-task-panel" />
+        </div>
+
+        {/* Right column: calendar + day view */}
         <div style={{ flex: 1 }}>
-          {/* Background shapes are absolute in .app-shell so they sit behind widgets */}
           <BackgroundShapes />
 
           <CalendarGrid
@@ -69,7 +91,7 @@ function AppContent() {
             tasks={filteredTasks}
           />
 
-          <DayView />
+          <DayView deleteMode={deleteMode} />
         </div>
       </div>
     </div>
@@ -77,7 +99,6 @@ function AppContent() {
 }
 
 export default function App() {
-  // Wrap the app with the ThemeProvider and TaskProvider so any component can access theme + tasks
   return (
     <ThemeProvider>
       <TaskProvider>
