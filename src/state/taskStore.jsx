@@ -90,6 +90,52 @@ export function TaskProvider({ children }) {
     setCategoryColor(cat, 'hsl(220 60% 60%)'); // or reuse your generator
   }
 
+  function deleteCategory(cat) {
+    setTasks((prev) => {
+      const newTasks = {};
+
+      for (const dateKey of Object.keys(prev)) {
+        const arr = prev[dateKey] || [];
+        // Keep only tasks NOT in this category
+        const filtered = arr.filter((t) => (t.category || 'Uncategorized') !== cat);
+        if (filtered.length > 0) newTasks[dateKey] = filtered;
+      }
+
+      return newTasks;
+    });
+
+    setCompletedTasks((prev) => {
+      const newCompleted = {};
+      for (const dateKey of Object.keys(prev)) {
+        const day = prev[dateKey];
+        if (!day) continue;
+        const updatedDay = {};
+        for (const taskId of Object.keys(day)) {
+          if (!taskId.includes(`__${cat}__`)) {
+            updatedDay[taskId] = day[taskId];
+          }
+        }
+        if (Object.keys(updatedDay).length > 0) newCompleted[dateKey] = updatedDay;
+      }
+      return newCompleted;
+    });
+
+    // Remove the category from enabledCategories
+    setEnabledCategories((prev) => {
+      const out = { ...prev };
+      delete out[cat];
+      return out;
+    });
+
+    // Remove the category color
+    setCategoryColors((prev) => {
+      const out = { ...prev };
+      delete out[cat];
+      return out;
+    });
+  }
+
+
 
   // Check if a task is complete
   function isTaskComplete(dateKey, taskId) {
@@ -378,6 +424,7 @@ export function TaskProvider({ children }) {
       deleteTask,
       editTask, 
       addCategory,
+      deleteCategory,
       tasksToCSV,
       escapeCSV,
     }}>
