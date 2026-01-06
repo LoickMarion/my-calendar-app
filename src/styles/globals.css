@@ -2,6 +2,8 @@
   --app-bg: #ffffff;
   --widget-bg: #f9fafb;
   --tile-bg: #ffffff;
+   user-select: none;
+   caret-color: transparent;
 
   --text-color: #000000;
   --text-secondary: #333333;
@@ -227,6 +229,8 @@ ul {
   background: var(--widget-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
 }
 
 .task-list ul {
@@ -352,3 +356,4 @@ ul {
 .delete-mode-toggle.delete-mode-active {
   background-color: red;
 }
+
