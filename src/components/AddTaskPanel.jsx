@@ -10,6 +10,7 @@ export default function AddTaskPanel() {
     getCategories,
     addTask,
     addCategory,
+    tasks, // <-- needed for CSV export
   } = useTaskStore();
 
   const categories = getCategories();
@@ -21,6 +22,55 @@ export default function AddTaskPanel() {
 
   const isCreatingNewCategory = category === '__new__';
 
+  // -----------------------------
+  // CSV HELPERS
+  // -----------------------------
+  function escapeCSV(value) {
+    if (value == null) return "";
+    const str = value.toString();
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+
+  function tasksToCSV(tasksObj) {
+    const rows = [["date", "category", "text"]];
+
+    for (const dateKey of Object.keys(tasksObj)) {
+      const arr = tasksObj[dateKey] || [];
+      arr.forEach((t) => {
+        rows.push([
+          dateKey,
+          escapeCSV(t.category || ""),
+          escapeCSV(t.description || "")
+        ]);
+      });
+    }
+
+    return rows.map((r) => r.join(",")).join("\n");
+  }
+
+  function downloadCSV(csvString, filename = "tasks.csv") {
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }
+
+  function handleDownloadCSV() {
+    const csv = tasksToCSV(tasks);
+    downloadCSV(csv);
+  }
+
+  // -----------------------------
+  // ADD TASK HANDLER
+  // -----------------------------
   function handleSubmit(e) {
     e.preventDefault();
     if (!text.trim() || !date) return;
@@ -118,6 +168,14 @@ export default function AddTaskPanel() {
           Add Task
         </button>
       </form>
+      
+      <button
+        type="button"
+        onClick={handleDownloadCSV}
+        style={{ marginTop: '1rem' }}
+      >
+        Download Tasks CSV
+      </button>
     </aside>
   );
 }
