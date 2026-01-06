@@ -53,6 +53,28 @@ export function TaskProvider({ children }) {
     });
   }
 
+  function deleteTask(dateKey, taskId) {
+    setTasks(prev => {
+      const day = prev[dateKey] || [];
+      const filtered = day.filter(t => t.id !== taskId);
+      return { ...prev, [dateKey]: filtered };
+    });
+    setCompletedTasks(prev => {
+      if (!prev[dateKey]) return prev;
+      const updated = { ...prev[dateKey] };
+      delete updated[taskId];
+      return { ...prev, [dateKey]: updated };
+    });
+  }
+
+  function editTask(dateKey, taskId, updates = {}) {
+    setTasks(prev => {
+      const day = prev[dateKey] || [];
+      const newDay = day.map(t => t.id === taskId ? { ...t, ...updates } : t);
+      return { ...prev, [dateKey]: newDay };
+    });
+  }
+
   function addCategory(cat) {
     setEnabledCategories(prev => ({ ...prev, [cat]: true }));
     setCategoryColor(cat, 'hsl(220 60% 60%)'); // or reuse your generator
@@ -343,6 +365,8 @@ export function TaskProvider({ children }) {
       toggleAllCategories,
       importTasks,
       addTask,
+      deleteTask,
+      editTask, 
       addCategory,
       tasksToCSV,
       escapeCSV,

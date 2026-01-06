@@ -2,7 +2,7 @@ import React from 'react';
 import TaskList from './TaskList';
 import { useTaskStore } from '../state/taskStore.jsx';
 
-export default function DayView() {
+export default function DayView({ mode = 'select' }) {
   const { selectedDate, getTasksForDate } = useTaskStore();
 
   if (!selectedDate) {
@@ -27,7 +27,7 @@ export default function DayView() {
         })}
       </h2>
 
-      <TaskList tasks={tasks} dateKey={dateKey} />
+      <TaskList tasks={tasks} dateKey={dateKey} mode={mode} />
     </aside>
   );
 }
