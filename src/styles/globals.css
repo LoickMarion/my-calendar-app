@@ -96,7 +96,7 @@ ul {
 .navigation-bar button:hover,
 .import-controls .file-label .file-button:hover,
 .categories-controls button:hover,
-.delete-mode-toggle:hover,
+.mode-toggle:hover,
 .add-task-button:hover {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
@@ -104,7 +104,6 @@ ul {
 .navigation-bar button:active,
 .import-controls .file-label .file-button:active,
 .categories-controls button:active,
-.delete-mode-toggle:active,
 .add-task-button:active {
   transform: translateY(1px);
 }
@@ -112,7 +111,7 @@ ul {
 .navigation-bar button:focus,
 .import-controls .file-label .file-button:focus,
 .categories-controls button:focus,
-.delete-mode-toggle:focus,
+.mode-toggle:focus,
 .add-task-button:focus {
   outline: 3px solid rgba(37, 99, 235, 0.12);
 }
@@ -353,7 +352,37 @@ ul {
   font-weight: bold;
 }
 
-.delete-mode-toggle.delete-mode-active {
-  background-color: red;
+.mode-toggle {
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 78px;
 }
+
+.mode-select {
+  background: var(--tile-bg);
+  color: var(--text-color);
+}
+
+.mode-delete {
+  background: red;
+  border-color: #e88;
+  color: var(--text-color);
+}
+
+.mode-edit {
+  background: purple;             
+  border-color: #aac;
+  color: var(--text-color);
+}
+
 

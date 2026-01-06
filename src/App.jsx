@@ -24,7 +24,15 @@ function AppContent() {
   });
 
   // Global delete mode
-  const [deleteMode, setDeleteMode] = useState(false);
+  const [mode, setMode] = useState('select'); 
+
+  function cycleMode() {
+    setMode((prev) => {
+      if (prev === 'select') return 'delete';
+      if (prev === 'delete') return 'edit';
+      return 'select';
+    });
+  }
 
   const { setSelectedDate, selectedDate, getFilteredTasks } = useTaskStore();
 
@@ -59,15 +67,14 @@ function AppContent() {
     <div className="app-shell">
       <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
 
-      {/* Delete Mode Toggle */}
-      <div style={{ padding: '0.5rem 0' }}>
-        <button
-          onClick={() => setDeleteMode(!deleteMode)}
-          className={`delete-mode-toggle ${deleteMode ? "delete-mode-active" : ""}`}
-        >
-          {deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
-        </button>
-      </div>
+    <div style={{ padding: '0.5rem 0' }}>
+      <button
+        onClick={cycleMode}
+        className={`mode-toggle mode-${mode}`}
+      >
+        Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+      </button>
+    </div>
 
       <div
         className="app-layout"
@@ -75,7 +82,7 @@ function AppContent() {
       >
         {/* Left column: categories + add task */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <CategoriesFilter deleteMode={deleteMode} />
+          <CategoriesFilter mode={mode} />
           <AddTaskPanel className="add-task-panel" />
         </div>
 
@@ -91,7 +98,7 @@ function AppContent() {
             tasks={filteredTasks}
           />
 
-          <DayView deleteMode={deleteMode} />
+          <DayView mode={mode} />
         </div>
       </div>
     </div>
