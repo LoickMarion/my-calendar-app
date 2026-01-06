@@ -11,6 +11,8 @@ export function TaskProvider({ children }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [tasks, setTasks] = useState({});
 
+  const [editingTask, setEditingTask] = useState(null);
+
   // enabledCategories is a map from categoryKey -> boolean
   const [enabledCategories, setEnabledCategories] = useState({});
 
@@ -77,13 +79,49 @@ export function TaskProvider({ children }) {
     });
   }
 
-  function editTask(dateKey, taskId, updates = {}) {
-    setTasks(prev => {
-      const day = prev[dateKey] || [];
-      const newDay = day.map(t => t.id === taskId ? { ...t, ...updates } : t);
-      return { ...prev, [dateKey]: newDay };
-    });
+  function startEditTask(dateKey, taskId) {
+    console.log('startEditTask', dateKey, taskId);
+
+    const [idDate, category, indexStr] = taskId.split('__');
+    const index = parseInt(indexStr, 10);
+
+    const arr = tasks[dateKey] || [];
+    const categoryTasks = arr.filter(t => t.category === category);
+    const task = categoryTasks[index];
+
+    if (!task) {
+      console.warn('Task not found for editing:', dateKey, taskId);
+      return;
+    }
+
+    setEditingTask({ dateKey, taskId, task });
   }
+
+  function cancelEditTask() {
+    console.log('cancelEditTask');
+    setEditingTask(null);
+  }
+
+  function saveTaskEdits(dateKey, taskId, updates) {
+    console.log('saveTaskEdits', dateKey, taskId, updates);
+
+    const [idDate, category, indexStr] = taskId.split('__');
+    const index = parseInt(indexStr, 10);
+
+    setTasks(prev => {
+      const arr = prev[dateKey] || [];
+      const categoryTasks = arr.filter(t => t.category === category);
+      const taskToUpdate = categoryTasks[index];
+
+      if (!taskToUpdate) return prev;
+
+      const updatedArr = arr.map(t => (t === taskToUpdate ? { ...t, ...updates } : t));
+      return { ...prev, [dateKey]: updatedArr };
+    });
+
+    setEditingTask(null);
+  }
+
 
   function addCategory(cat) {
     setEnabledCategories(prev => ({ ...prev, [cat]: true }));
@@ -460,7 +498,10 @@ export function TaskProvider({ children }) {
       importTasks,
       addTask,
       deleteTask,
-      editTask, 
+      editingTask,
+      startEditTask,
+      cancelEditTask,
+      saveTaskEdits,
       addCategory,
       deleteCategory,
       renameCategory,

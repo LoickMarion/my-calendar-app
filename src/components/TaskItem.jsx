@@ -1,11 +1,17 @@
 // TaskItem.jsx
 // Renders a single task row with select, delete, and edit modes
+// Supports dynamic IDs for delete and edit
 
 import React from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
 
 export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
-  const { toggleTaskComplete, isTaskComplete, deleteTask } = useTaskStore();
+  const {
+    toggleTaskComplete,
+    isTaskComplete,
+    deleteTask,
+    startEditTask, // <-- use this for edit mode
+  } = useTaskStore();
 
   const checked = isTaskComplete(dateKey, id);
 
@@ -35,9 +41,14 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
     );
   } else if (mode === 'edit') {
     actionBox = (
-      <div className="task-action-edit" aria-label={`Edit ${text}`}>
+      <button
+        type="button"
+        className="task-action-edit"
+        onClick={() => startEditTask(dateKey, id)}
+        aria-label={`Edit ${text}`}
+      >
         ✎
-      </div>
+      </button>
     );
   }
 

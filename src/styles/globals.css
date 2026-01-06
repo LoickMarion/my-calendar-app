@@ -415,3 +415,24 @@ ul {
   justify-content: center;
   cursor: default;
 }
+
+.cancel-edit-button {
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 78px;
+  margin-bottom: 1rem;
+}
+
+.cancel-edit-button:hover {
+  background-color: hsl(0, 60%, 70%);
+}

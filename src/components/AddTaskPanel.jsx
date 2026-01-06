@@ -1,8 +1,7 @@
 // AddTaskPanel.jsx
-// Global task creation panel to sit under CategoriesFilter.
-// Uses: category, date, and task text (stored as description).
+// Global task creation + editing panel
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
 
 export default function AddTaskPanel({ className = "" }) {
@@ -10,7 +9,10 @@ export default function AddTaskPanel({ className = "" }) {
     getCategories,
     addTask,
     addCategory,
-    tasks, // <-- needed for CSV export
+    tasks,
+    editingTask,
+    saveTaskEdits,
+    cancelEditTask
   } = useTaskStore();
 
   const categories = getCategories();
@@ -21,6 +23,24 @@ export default function AddTaskPanel({ className = "" }) {
   const [date, setDate] = useState('');
 
   const isCreatingNewCategory = category === '__new__';
+  const isEditing = Boolean(editingTask);
+
+  // -----------------------------
+  // SYNC FORM WHEN EDITING
+  // -----------------------------
+  useEffect(() => {
+    if (editingTask) {
+      setText(editingTask.task.description || '');
+      setCategory(editingTask.task.category || '');
+      setNewCategory('');
+      setDate(editingTask.dateKey);
+    } else {
+      setText('');
+      setCategory('');
+      setNewCategory('');
+      setDate('');
+    }
+  }, [editingTask]);
 
   // -----------------------------
   // CSV HELPERS
@@ -69,37 +89,46 @@ export default function AddTaskPanel({ className = "" }) {
   }
 
   // -----------------------------
-  // ADD TASK HANDLER
+  // SUBMIT HANDLER (ADD vs EDIT)
   // -----------------------------
   function handleSubmit(e) {
     e.preventDefault();
     if (!text.trim() || !date) return;
 
-    const dateKey = date; // input type="date" gives YYYY-MM-DD
-
     let finalCategory = category;
 
-    // If user is creating a new category
     if (isCreatingNewCategory && newCategory.trim()) {
       finalCategory = newCategory.trim();
       addCategory(finalCategory);
     }
 
-    addTask(dateKey, {
-      text: text.trim(),
-      category: finalCategory || 'Uncategorized',
-    });
+    if (isEditing) {
+      saveTaskEdits(
+        editingTask.dateKey,
+        editingTask.taskId,
+        {
+          description: text.trim(),
+          category: finalCategory || 'Uncategorized'
+        }
+      );
+    } else {
+      addTask(date, {
+        text: text.trim(),
+        category: finalCategory || 'Uncategorized'
+      });
+    }
 
-    // Reset form
-    setText('');
-    setCategory('');
-    setNewCategory('');
-    setDate('');
+    // Reset handled by useEffect when editingTask clears
   }
 
   return (
-    <aside className={`add-task-panel-root ${className}`} style={{ marginTop: '1rem' }}>
-      <h3 style={{ marginBottom: '0.5rem' }}>Add Task</h3>
+    <aside
+      className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
+      style={{ marginTop: '1rem' }}
+    >
+      <h3 style={{ marginBottom: '0.5rem' }}>
+        {isEditing ? 'Edit Task' : 'Add Task'}
+      </h3>
 
       <form
         onSubmit={handleSubmit}
@@ -159,18 +188,28 @@ export default function AddTaskPanel({ className = "" }) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
+            disabled={isEditing}
             style={{ width: '100%' }}
           />
         </div>
 
         <button
-            type="submit"
-            className="add-task-button"
-            disabled={!text.trim() || !date}
-            >
-            Add Task
+          type="submit"
+          className="add-task-button"
+          disabled={!text.trim() || !date}
+        >
+          {isEditing ? 'Save Changes' : 'Add Task'}
         </button>
 
+        {isEditing && (
+          <button
+            type="button"
+            onClick={cancelEditTask}
+            className="cancel-edit-button"
+          >
+            Cancel
+          </button>
+        )}
       </form>
 
       <button
