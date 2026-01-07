@@ -69,7 +69,8 @@ ul {
 .add-task-panel-root select,
 .add-task-panel-root textarea,
 .download-csv-button,
-.add-task-button {
+.add-task-button,
+.month-navigator button {
   background: var(--tile-bg);
   border: 1px solid var(--tile-border);
   color: var(--text-color);
@@ -449,4 +450,27 @@ ul {
 
 .task-list-item {
   pointer-events: auto;
+}
+
+.month-navigator{
+  padding: var(--space-sm);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}
+
+.add-task-panel-root {
+  padding: var(--space-sm);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}
+
+.add-task-panel-root h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-sm);
 }

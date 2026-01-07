@@ -144,15 +144,14 @@ export default function AddTaskPanel({ className = "" }) {
   return (
     <aside
       className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
-      style={{ marginTop: '1rem' }}
     >
-      <h3 style={{ marginBottom: '0.5rem' }}>
+      <h3>
         {isEditing ? 'Edit Task' : 'Add Task'}
       </h3>
 
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+        style={{ display: 'flex', flexDirection: 'column'}}
       >
         {/* Task Text */}
         <div>
@@ -198,7 +197,7 @@ export default function AddTaskPanel({ className = "" }) {
           )}
         </div>
 
-        {/* Date (NOW EDITABLE) */}
+        {/* Date */}
         <div>
           <label style={{ display: 'block', marginBottom: '0.25rem' }}>
             Date
