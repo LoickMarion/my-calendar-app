@@ -20,6 +20,8 @@ import CategoriesFilter from './components/CategoriesFilter';
 import ErrorBoundary from './components/ErrorBoundary';
 import BackgroundShapes from './components/BackgroundShapes';
 import AddTaskPanel from './components/AddTaskPanel';
+import MonthNavigator from './components/MonthNavigator';
+
 
 import './styles/globals.css';
 
@@ -133,6 +135,12 @@ function AppContent() {
 
           <div style={{ flex: 1 }}>
             <BackgroundShapes />
+            <MonthNavigator
+              monthLabel={monthLabel}
+              onPrev={handlePrev}
+              onNext={handleNext}
+            />
+
             <CalendarGrid
               year={current.year}
               month={current.month}
@@ -140,6 +148,7 @@ function AppContent() {
               selectedDate={selectedDate}
               tasks={filteredTasks}
             />
+
             <DayView mode={mode} />
           </div>
         </div>
