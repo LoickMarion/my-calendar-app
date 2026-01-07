@@ -108,18 +108,15 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <section className="calendar-grid" role="grid" aria-label="Month">
-        <div className="calendar-header-row">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((label) => (
-            <div key={label} className="calendar-header-cell">
-              {label}
-            </div>
-          ))}
-        </div>
+    <section className="calendar-grid" role="grid" aria-label="Month">
+      <div className="calendar-header-row">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((label) => (
+          <div key={label} className="calendar-header-cell">{label}</div>
+        ))}
+      </div>
 
-        {tiles}
-      </section>
-    </DndContext>
+      {tiles}
+    </section>
   );
+
 }

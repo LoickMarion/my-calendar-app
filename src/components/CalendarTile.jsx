@@ -1,5 +1,5 @@
 // CalendarTile.jsx
-// Droppable calendar day tile
+// Droppable calendar day tile with drag-over highlighting
 
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
@@ -14,14 +14,14 @@ export default function CalendarTile({
   allComplete = false,
 }) {
   const { setNodeRef, isOver } = useDroppable({
-    id: `day__${dateKey}`,
+    id: `day__${dateKey}`, // unique ID for DnD
   });
 
   const classNames = ['calendar-tile'];
 
   if (!isCurrentMonth) classNames.push('muted');
   if (isSelected) classNames.push('selected');
-  if (isOver) classNames.push('drag-over');
+  if (isOver) classNames.push('drag-over'); // highlight when dragging over
 
   const ariaLabel = `${date.toDateString()}${
     taskCount > 0 ? `: ${taskCount} incomplete tasks` : ''
@@ -29,7 +29,7 @@ export default function CalendarTile({
 
   return (
     <button
-      ref={setNodeRef}
+      ref={setNodeRef} // make droppable
       type="button"
       className={classNames.join(' ')}
       onClick={() => onClick(date)}

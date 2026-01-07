@@ -441,3 +441,12 @@ ul {
   outline: 2px dashed var(--accent);
   background-color: rgba(100, 150, 255, 0.1);
 }
+
+
+.task-group-list {
+  pointer-events: none; 
+}
+
+.task-list-item {
+  pointer-events: auto;
+}

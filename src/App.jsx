@@ -70,9 +70,8 @@ function AppContent() {
 
     const activeId = active.id;
     const overId = over.id;
-    // console.log('Drag End:', activeId, '→', overId);
+    console.log('Drag End:', activeId, '→', overId);
       if (activeId.startsWith('task__') && overId.startsWith('task__')) {
-        console.log('Moving task within same day');
         const taskId = activeId.replace(/^task__/, '');
         const targetId = overId.replace(/^task__/, '');
         const dateKey = taskId.split('__')[0];

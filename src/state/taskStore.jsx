@@ -504,8 +504,6 @@ export function TaskProvider({ children }) {
   }
 
   function moveTask(dateKey, activeId, overId) {
-    console.log('moveTask', dateKey, activeId, overId);
-    console.log('Parsed IDs:', activeId.split('__'), overId.split('__'));
     const [_, categoryA, indexA] = activeId.split('__');
     const [__, categoryB, indexB] = overId.split('__');
     const iA = parseInt(indexA, 10);
@@ -513,24 +511,44 @@ export function TaskProvider({ children }) {
 
     setTasks(prev => {
       const arr = prev[dateKey] || [];
+
+      if (categoryA !== categoryB) {
+        // For now, only allow moves **within same category**
+        return prev;
+      }
+
+      // Extract all tasks in this category
       const categoryTasks = arr.filter(t => t.category === categoryA);
       const task = categoryTasks[iA];
       if (!task) return prev;
 
       // Remove from old position
-      let newArr = arr.filter(t => t !== task);
+      const newCategoryTasks = [...categoryTasks];
+      newCategoryTasks.splice(iA, 1);
 
-      // Insert in new position
-      const before = newArr.filter(t => t.category === categoryB).slice(0, iB);
-      const after = newArr.filter(t => t.category === categoryB).slice(iB);
-      newArr = [...newArr.filter(t => t.category !== categoryB), ...before, task, ...after];
+      // Insert at new position
+      newCategoryTasks.splice(iB, 0, task);
+
+      // Rebuild array preserving category order
+      const newArr = [];
+      arr.forEach(t => {
+        if (t.category === categoryA) {
+          // Insert the reordered category tasks only once
+          if (!newArr.some(tt => tt.category === categoryA)) {
+            newArr.push(...newCategoryTasks);
+          }
+        } else {
+          newArr.push(t);
+        }
+      });
 
       return { ...prev, [dateKey]: newArr };
     });
   }
 
-  function moveTaskToDay(sourceDateKey, targetDateKey, taskId) {
-    console.log('moveTaskToDay', sourceDateKey, targetDateKey, taskId);
+
+  function moveTaskToDate(sourceDateKey, targetDateKey, taskId) {
+    console.log('moveTaskToDate', sourceDateKey, targetDateKey, taskId);
     const [, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
@@ -613,7 +631,7 @@ export function TaskProvider({ children }) {
       escapeCSV,
       reorderTask,
       moveTask,
-      moveTaskToDay,
+      moveTaskToDate,
     }}>
       {children}
     </TaskContext.Provider>
