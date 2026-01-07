@@ -1,8 +1,8 @@
 // App.jsx
-// Root app component: wires navigation, calendar, categories, add-task panel,
-// and day view together. Now includes global deleteMode state.
+// Root app component with global DnD support for moving tasks across days
 
 import React, { useState } from 'react';
+import { DndContext, closestCenter } from '@dnd-kit/core';
 import { TaskProvider, useTaskStore } from './state/taskStore.jsx';
 import { ThemeProvider } from './state/themeStore.jsx';
 
@@ -17,24 +17,24 @@ import AddTaskPanel from './components/AddTaskPanel';
 import './styles/globals.css';
 
 function AppContent() {
-  // Month/year navigation state
   const [current, setCurrent] = useState(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
   });
 
-  // Global delete mode
-  const [mode, setMode] = useState('select'); 
+  const [mode, setMode] = useState('select');
+
+  const {
+    selectedDate,
+    setSelectedDate,
+    getFilteredTasks,
+    moveTaskToDate,
+    moveTask
+  } = useTaskStore();
 
   function cycleMode() {
-    setMode((prev) => {
-      if (prev === 'select') return 'delete';
-      if (prev === 'delete') return 'edit';
-      return 'select';
-    });
+    setMode(prev => (prev === 'select' ? 'delete' : prev === 'delete' ? 'edit' : 'select'));
   }
-
-  const { setSelectedDate, selectedDate, getFilteredTasks } = useTaskStore();
 
   function handlePrev() {
     let { year, month } = current;
@@ -63,45 +63,76 @@ function AppContent() {
 
   const filteredTasks = getFilteredTasks();
 
+  // Top-level drag handler
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+    // console.log('Drag End:', activeId, '→', overId);
+      if (activeId.startsWith('task__') && overId.startsWith('task__')) {
+        console.log('Moving task within same day');
+        const taskId = activeId.replace(/^task__/, '');
+        const targetId = overId.replace(/^task__/, '');
+        const dateKey = taskId.split('__')[0];
+
+        // console.log('DateKey:', dateKey, 'TaskID:', taskId, 'TargetID:', targetId);
+        moveTask(
+          dateKey,
+          taskId,
+          targetId
+        );
+        return;
+    }
+
+    if (activeId.startsWith('task__') && overId.startsWith('day__')) {
+      const taskId = activeId.replace(/^task__/, '');
+      const fromDateKey = taskId.split('__')[0];
+      const toDateKey = overId.replace(/^day__/, '');
+
+      if (fromDateKey === toDateKey) return;
+
+      moveTaskToDate(
+        fromDateKey,
+        toDateKey,
+        taskId
+      );
+    }
+  }
+
+
   return (
-    <div className="app-shell">
-      <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <div className="app-shell">
+        <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
 
-    <div style={{ padding: '0.5rem 0' }}>
-      <button
-        onClick={cycleMode}
-        className={`mode-toggle mode-${mode}`}
-      >
-        Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
-      </button>
-    </div>
-
-      <div
-        className="app-layout"
-        style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
-      >
-        {/* Left column: categories + add task */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <CategoriesFilter mode={mode} />
-          <AddTaskPanel className="add-task-panel" />
+        <div style={{ padding: '0.5rem 0' }}>
+          <button onClick={cycleMode} className={`mode-toggle mode-${mode}`}>
+            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+          </button>
         </div>
 
-        {/* Right column: calendar + day view */}
-        <div style={{ flex: 1 }}>
-          <BackgroundShapes />
+        <div className="app-layout" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <CategoriesFilter mode={mode} />
+            <AddTaskPanel />
+          </div>
 
-          <CalendarGrid
-            year={current.year}
-            month={current.month}
-            onSelectDate={(d) => setSelectedDate(d)}
-            selectedDate={selectedDate}
-            tasks={filteredTasks}
-          />
-
-          <DayView mode={mode} />
+          <div style={{ flex: 1 }}>
+            <BackgroundShapes />
+            <CalendarGrid
+              year={current.year}
+              month={current.month}
+              onSelectDate={setSelectedDate}
+              selectedDate={selectedDate}
+              tasks={filteredTasks}
+            />
+            <DayView mode={mode} />
+          </div>
         </div>
       </div>
-    </div>
+    </DndContext>
   );
 }
 

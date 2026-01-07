@@ -1,8 +1,8 @@
 // TaskItem.jsx
-// Renders a single task row with select, delete, and edit modes
-// Supports dynamic IDs for delete and edit
+// Draggable task row with select / delete / edit modes
 
 import React from 'react';
+import { useDraggable } from '@dnd-kit/core';
 import { useTaskStore } from '../state/taskStore.jsx';
 
 export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
@@ -10,14 +10,26 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
     toggleTaskComplete,
     isTaskComplete,
     deleteTask,
-    startEditTask, // <-- use this for edit mode
+    startEditTask
   } = useTaskStore();
+
+//   console.log('DateKey:', dateKey, 'Task ID:', id);
+  const draggableId = `${id}`;
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: draggableId
+  });
 
   const checked = isTaskComplete(dateKey, id);
 
-  // Determine right-hand "action box" based on mode
-  let actionBox = null;
+  const style = transform
+    ? {
+        transform: `translate(${transform.x}px, ${transform.y}px)`,
+        zIndex: 1000
+      }
+    : undefined;
 
+  let actionBox = null;
   if (mode === 'select') {
     actionBox = (
       <input
@@ -25,16 +37,14 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
         className="task-check"
         checked={checked}
         onChange={() => toggleTaskComplete(dateKey, id)}
-        aria-label={`Mark ${text} as complete`}
       />
     );
   } else if (mode === 'delete') {
     actionBox = (
       <button
         type="button"
-        onClick={() => deleteTask(dateKey, id)}
         className="task-action-delete"
-        aria-label={`Delete ${text}`}
+        onClick={() => deleteTask(dateKey, id)}
       >
         ✕
       </button>
@@ -45,7 +55,6 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
         type="button"
         className="task-action-edit"
         onClick={() => startEditTask(dateKey, id)}
-        aria-label={`Edit ${text}`}
       >
         ✎
       </button>
@@ -53,7 +62,13 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
   }
 
   return (
-    <li className={`task-list-item ${checked ? 'completed' : ''}`}>
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`task-list-item ${checked ? 'completed' : ''} ${isDragging ? 'dragging' : ''}`}
+    >
       <div className="task-left">
         <span className="bullet">•</span>
         <span className="task-title">{text}</span>

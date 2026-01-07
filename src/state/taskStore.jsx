@@ -265,6 +265,31 @@ export function TaskProvider({ children }) {
     return str;
   }
 
+  function reorderTask(dateKey, activeId, overId) {
+    const [_, categoryA, indexA] = activeId.split('__');
+    const [__, categoryB, indexB] = overId.split('__');
+    const iA = parseInt(indexA, 10);
+    const iB = parseInt(indexB, 10);
+
+    setTasks(prev => {
+      const arr = prev[dateKey] || [];
+      const categoryTasks = arr.filter(t => t.category === categoryA);
+      const task = categoryTasks[iA];
+      if (!task) return prev;
+
+      // Remove old
+      let newArr = arr.filter(t => t !== task);
+
+      // Insert at new index
+      const before = newArr.filter(t => t.category === categoryB).slice(0, iB);
+      const after = newArr.filter(t => t.category === categoryB).slice(iB);
+      newArr = [...newArr.filter(t => t.category !== categoryB), ...before, task, ...after];
+
+      return { ...prev, [dateKey]: newArr };
+    });
+}
+
+
 
   // Persist/load category bubble colors to localStorage so user customizations survive reloads
   useEffect(() => {
@@ -478,6 +503,85 @@ export function TaskProvider({ children }) {
     });
   }
 
+  function moveTask(dateKey, activeId, overId) {
+    console.log('moveTask', dateKey, activeId, overId);
+    console.log('Parsed IDs:', activeId.split('__'), overId.split('__'));
+    const [_, categoryA, indexA] = activeId.split('__');
+    const [__, categoryB, indexB] = overId.split('__');
+    const iA = parseInt(indexA, 10);
+    const iB = parseInt(indexB, 10);
+
+    setTasks(prev => {
+      const arr = prev[dateKey] || [];
+      const categoryTasks = arr.filter(t => t.category === categoryA);
+      const task = categoryTasks[iA];
+      if (!task) return prev;
+
+      // Remove from old position
+      let newArr = arr.filter(t => t !== task);
+
+      // Insert in new position
+      const before = newArr.filter(t => t.category === categoryB).slice(0, iB);
+      const after = newArr.filter(t => t.category === categoryB).slice(iB);
+      newArr = [...newArr.filter(t => t.category !== categoryB), ...before, task, ...after];
+
+      return { ...prev, [dateKey]: newArr };
+    });
+  }
+
+  function moveTaskToDay(sourceDateKey, targetDateKey, taskId) {
+    console.log('moveTaskToDay', sourceDateKey, targetDateKey, taskId);
+    const [, category, indexStr] = taskId.split('__');
+    const index = parseInt(indexStr, 10);
+
+    setTasks(prev => {
+      const sourceArr = prev[sourceDateKey] || [];
+      const targetArr = prev[targetDateKey] || [];
+
+      // Get all tasks in the same category (stable order)
+      const sourceCategoryTasks = sourceArr.filter(
+        t => t.category === category
+      );
+
+      const taskToMove = sourceCategoryTasks[index];
+      if (!taskToMove) return prev;
+
+      // Remove task from source day
+      const newSourceArr = sourceArr.filter(t => t !== taskToMove);
+
+      // Add task to target day (append at end for now)
+      const newTargetArr = [...targetArr, taskToMove];
+
+      return {
+        ...prev,
+        [sourceDateKey]: newSourceArr,
+        [targetDateKey]: newTargetArr
+      };
+    });
+
+    // Move completion state if present
+    setCompletedTasks(prev => {
+      const sourceCompleted = prev[sourceDateKey] || {};
+      const targetCompleted = prev[targetDateKey] || {};
+
+      if (!sourceCompleted[taskId]) return prev;
+
+      const updatedSource = { ...sourceCompleted };
+      delete updatedSource[taskId];
+
+      return {
+        ...prev,
+        [sourceDateKey]: updatedSource,
+        [targetDateKey]: {
+          ...targetCompleted,
+          [taskId.replace(sourceDateKey, targetDateKey)]: true
+        }
+      };
+    });
+  }
+
+
+
   return (
     <TaskContext.Provider value={{
       selectedDate,
@@ -507,6 +611,9 @@ export function TaskProvider({ children }) {
       renameCategory,
       tasksToCSV,
       escapeCSV,
+      reorderTask,
+      moveTask,
+      moveTaskToDay,
     }}>
       {children}
     </TaskContext.Provider>

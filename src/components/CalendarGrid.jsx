@@ -1,12 +1,18 @@
 // CalendarGrid.jsx
-// Renders a 7x6 month grid. Uses CalendarTile for each day.
+// Renders a 7x6 month grid with droppable day tiles
 
 import React from 'react';
 import CalendarTile from './CalendarTile';
 import { useTaskStore } from '../state/taskStore.jsx';
+import { DndContext } from '@dnd-kit/core';
 
 export default function CalendarGrid({ year, month, onSelectDate, selectedDate }) {
-  const { tasks, isTaskComplete, isCategoryEnabled } = useTaskStore();
+  const {
+    tasks,
+    isTaskComplete,
+    isCategoryEnabled,
+    moveTaskToDay
+  } = useTaskStore();
 
   const getGroupTitle = (t) =>
     (t.title && t.title.toString().trim()) ||
@@ -14,7 +20,7 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
     'Untitled';
 
   const firstOfMonth = new Date(year, month, 1);
-  const startWeekday = firstOfMonth.getDay(); // 0 (Sun) - 6 (Sat)
+  const startWeekday = firstOfMonth.getDay();
 
   const tiles = [];
   let dayCounter = 1 - startWeekday;
@@ -22,6 +28,21 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
   const selectedKey = selectedDate
     ? selectedDate.toISOString().slice(0, 10)
     : null;
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over) return;
+
+    // Dropped on a calendar day
+    if (over.id.startsWith('day__')) {
+      const targetDateKey = over.id.replace('day__', '');
+      const [sourceDateKey] = active.id.split('__');
+
+      if (sourceDateKey !== targetDateKey) {
+        moveTaskToDay(sourceDateKey, targetDateKey, active.id);
+      }
+    }
+  }
 
   for (let row = 0; row < 6; row++) {
     const week = [];
@@ -33,7 +54,6 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
 
       const allTasksForDate = tasks[dateKey] || [];
 
-      // Rebuild the same groups TaskList uses
       const groups = allTasksForDate.reduce((acc, t) => {
         const groupTitle = getGroupTitle(t);
         if (!acc[groupTitle]) acc[groupTitle] = [];
@@ -41,24 +61,19 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
         return acc;
       }, {});
 
-      const groupKeys = Object.keys(groups);
-
-      // Walk tasks in the same order and build deterministic IDs
-      const allTasksWithIds = [];
-      groupKeys.forEach((gk) => {
+      const visibleTasks = [];
+      Object.keys(groups).forEach((gk) => {
         groups[gk].forEach((t, i) => {
           const id = `${dateKey}__${gk}__${i}`;
-          allTasksWithIds.push({ t, id, groupTitle: gk });
+          if (
+            isCategoryEnabled(
+              (t.category && t.category.toString().trim()) || gk
+            )
+          ) {
+            visibleTasks.push({ id });
+          }
         });
       });
-
-      const visibleTasks = allTasksWithIds.filter(({ t, groupTitle }) =>
-        isCategoryEnabled(
-          (t.category && t.category.toString().trim()) ||
-            groupTitle ||
-            'Uncategorized'
-        )
-      );
 
       const incompleteTasks = visibleTasks.filter(
         ({ id }) => !isTaskComplete(dateKey, id)
@@ -67,13 +82,13 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
       const taskCount = incompleteTasks.length;
       const hasTasks = visibleTasks.length > 0;
       const allComplete = hasTasks && taskCount === 0;
-
       const isSelected = selectedKey === dateKey;
 
       week.push(
         <CalendarTile
-          key={d.toISOString()}
+          key={dateKey}
           date={d}
+          dateKey={dateKey}
           isCurrentMonth={isCurrentMonth}
           isSelected={isSelected}
           taskCount={taskCount}
@@ -93,16 +108,18 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
   }
 
   return (
-    <section className="calendar-grid" role="grid" aria-label="Month">
-      <div className="calendar-header-row">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((label) => (
-          <div key={label} className="calendar-header-cell">
-            {label}
-          </div>
-        ))}
-      </div>
+    <DndContext onDragEnd={handleDragEnd}>
+      <section className="calendar-grid" role="grid" aria-label="Month">
+        <div className="calendar-header-row">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((label) => (
+            <div key={label} className="calendar-header-cell">
+              {label}
+            </div>
+          ))}
+        </div>
 
-      {tiles}
-    </section>
+        {tiles}
+      </section>
+    </DndContext>
   );
 }

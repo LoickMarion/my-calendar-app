@@ -1,20 +1,18 @@
 // TaskList.jsx
-// Renders a list of tasks for a date, grouped by title/category, using TaskItem.jsx.
+// Renders a list of tasks grouped by category for a single day
+// Uses SortableContext for drag-and-drop within the group
 
 import React from 'react';
 import { useTaskStore } from '../state/taskStore.jsx';
-import TaskItem from './TaskItem.jsx';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import SortableTaskItem from './SortableTaskItem.jsx';
 
 export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
-  const { getCategoryColor, deleteTask } = useTaskStore();
+  const { getCategoryColor } = useTaskStore();
 
-  // Group tasks by title or category
+  // Group tasks by category
   const groups = tasks.reduce((acc, t) => {
-    const groupTitle =
-      (t.title && t.title.toString().trim()) ||
-      (t.category && t.category.toString().trim()) ||
-      'Untitled';
-
+    const groupTitle = (t.category && t.category.toString().trim()) || 'Uncategorized';
     if (!acc[groupTitle]) acc[groupTitle] = [];
     acc[groupTitle].push(t);
     return acc;
@@ -22,48 +20,37 @@ export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
 
   const groupKeys = Object.keys(groups);
 
-  if (tasks.length === 0) {
-    return <p>No tasks for this date.</p>;
-  }
-
   return (
     <div className="task-list">
       <div className="task-groups">
         {groupKeys.map((gk) => (
           <section key={gk} className="task-group">
             <div className="task-group-header">
-              <h3
-                className="task-group-title"
-                style={{ background: getCategoryColor(gk) }}
-              >
+              <h3 className="task-group-title" style={{ background: getCategoryColor(gk) }}>
                 {gk}
               </h3>
               <span className="task-group-count">{groups[gk].length}</span>
             </div>
 
-            <ul className="task-group-list">
-              {groups[gk].map((t, i) => {
-                const detail =
-                  (t.description && t.description.toString().trim()) ||
-                  (t.notes && t.notes.toString().trim()) ||
-                  '';
-                const line = detail || '(no text)';
-
-                // Deterministic ID for the task
-                const id = `${dateKey}__${gk}__${i}`;
-
-                return (
-                  <TaskItem
-                    key={id}
-                    id={id}
-                    text={line}
-                    dateKey={dateKey}
-                    mode={mode}
-                    onDelete={() => deleteTask(dateKey, id)}
-                  />
-                );
-              })}
-            </ul>
+            <SortableContext
+              items={groups[gk].map((t, i) => `${dateKey}__${gk}__${i}`)}
+              strategy={verticalListSortingStrategy}
+            >
+              <ul className="task-group-list">
+                {groups[gk].map((t, i) => {
+                  const id = `task__${dateKey}__${gk}__${i}`;
+                  return (
+                    <SortableTaskItem
+                      key={id}
+                      id={id}
+                      text={t.description || '(no text)'}
+                      dateKey={dateKey}
+                      mode={mode}
+                    />
+                  );
+                })}
+              </ul>
+            </SortableContext>
           </section>
         ))}
       </div>

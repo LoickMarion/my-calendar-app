@@ -436,3 +436,8 @@ ul {
 .cancel-edit-button:hover {
   background-color: hsl(0, 60%, 70%);
 }
+
+.calendar-tile.drag-over {
+  outline: 2px dashed var(--accent);
+  background-color: rgba(100, 150, 255, 0.1);
+}

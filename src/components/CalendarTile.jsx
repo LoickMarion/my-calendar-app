@@ -1,23 +1,27 @@
 // CalendarTile.jsx
-// Represents a single day tile in the calendar grid.
-// Props:
-// - date: Date object
-// - onClick(date): callback when tile is clicked
-// - isCurrentMonth: boolean indicating the tile belongs to the displayed month
+// Droppable calendar day tile
 
 import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
 
 export default function CalendarTile({
   date,
+  dateKey,
   onClick,
   isCurrentMonth = true,
   isSelected = false,
   taskCount = 0,
-  allComplete = false
+  allComplete = false,
 }) {
-  const classes = ['calendar-tile'];
-  if (!isCurrentMonth) classes.push('muted');
-  if (isSelected) classes.push('selected');
+  const { setNodeRef, isOver } = useDroppable({
+    id: `day__${dateKey}`,
+  });
+
+  const classNames = ['calendar-tile'];
+
+  if (!isCurrentMonth) classNames.push('muted');
+  if (isSelected) classNames.push('selected');
+  if (isOver) classNames.push('drag-over');
 
   const ariaLabel = `${date.toDateString()}${
     taskCount > 0 ? `: ${taskCount} incomplete tasks` : ''
@@ -25,7 +29,9 @@ export default function CalendarTile({
 
   return (
     <button
-      className={classes.join(' ')}
+      ref={setNodeRef}
+      type="button"
+      className={classNames.join(' ')}
       onClick={() => onClick(date)}
       aria-pressed={isSelected}
       aria-label={ariaLabel}
@@ -33,11 +39,11 @@ export default function CalendarTile({
       <div className="date-number">{date.getDate()}</div>
 
       {allComplete ? (
-        <div className="task-complete-x" aria-hidden>
+        <div className="task-complete-x" aria-hidden="true">
           ✕
         </div>
       ) : taskCount > 0 ? (
-        <div className="task-badge" aria-hidden>
+        <div className="task-badge" aria-hidden="true">
           {taskCount}
         </div>
       ) : null}
