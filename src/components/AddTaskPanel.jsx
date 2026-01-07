@@ -12,7 +12,8 @@ export default function AddTaskPanel({ className = "" }) {
     tasks,
     editingTask,
     saveTaskEdits,
-    cancelEditTask
+    cancelEditTask,
+    moveTaskToDate
   } = useTaskStore();
 
   const categories = getCategories();
@@ -43,7 +44,7 @@ export default function AddTaskPanel({ className = "" }) {
   }, [editingTask]);
 
   // -----------------------------
-  // CSV HELPERS
+  // CSV HELPERS (unchanged)
   // -----------------------------
   function escapeCSV(value) {
     if (value == null) return "";
@@ -103,22 +104,41 @@ export default function AddTaskPanel({ className = "" }) {
     }
 
     if (isEditing) {
-      saveTaskEdits(
-        editingTask.dateKey,
-        editingTask.taskId,
-        {
-          description: text.trim(),
-          category: finalCategory || 'Uncategorized'
-        }
-      );
+      const fromDateKey = editingTask.dateKey;
+      const toDateKey = date;
+      const taskId = editingTask.taskId;
+
+      // Date changed → move task first
+      if (fromDateKey !== toDateKey) {
+        moveTaskToDate(fromDateKey, toDateKey, taskId);
+
+        // Then edit the task on the NEW date
+        saveTaskEdits(
+          toDateKey,
+          taskId,
+          {
+            description: text.trim(),
+            category: finalCategory || 'Uncategorized'
+          }
+        );
+      } else {
+        // Same date → simple edit
+        saveTaskEdits(
+          fromDateKey,
+          taskId,
+          {
+            description: text.trim(),
+            category: finalCategory || 'Uncategorized'
+          }
+        );
+      }
     } else {
+      // Create new task
       addTask(date, {
         text: text.trim(),
         category: finalCategory || 'Uncategorized'
       });
     }
-
-    // Reset handled by useEffect when editingTask clears
   }
 
   return (
@@ -178,7 +198,7 @@ export default function AddTaskPanel({ className = "" }) {
           )}
         </div>
 
-        {/* Date */}
+        {/* Date (NOW EDITABLE) */}
         <div>
           <label style={{ display: 'block', marginBottom: '0.25rem' }}>
             Date
@@ -188,7 +208,6 @@ export default function AddTaskPanel({ className = "" }) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            disabled={isEditing}
             style={{ width: '100%' }}
           />
         </div>

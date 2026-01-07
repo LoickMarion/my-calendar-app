@@ -40,7 +40,7 @@ export function TaskProvider({ children }) {
         (task.category && task.category.toString().trim()) ||
         'Uncategorized';
 
-      const id = `${dateKey}__${category}__${index}`;
+      const id = `task__${dateKey}__${category}__${index}`;
 
       const newTask = {
         id,
@@ -107,18 +107,39 @@ export function TaskProvider({ children }) {
   function saveTaskEdits(dateKey, taskId, updates) {
     console.log('saveTaskEdits', dateKey, taskId, updates);
 
-    const [idDate, category, indexStr] = taskId.split('__');
+    const [__, fromDateKey, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
     setTasks(prev => {
-      const arr = prev[dateKey] || [];
-      const categoryTasks = arr.filter(t => t.category === category);
+      const fromArr = prev[fromDateKey] || [];
+      const categoryTasks = fromArr.filter(t => t.category === category);
       const taskToUpdate = categoryTasks[index];
 
       if (!taskToUpdate) return prev;
 
-      const updatedArr = arr.map(t => (t === taskToUpdate ? { ...t, ...updates } : t));
-      return { ...prev, [dateKey]: updatedArr };
+      const updatedTask = {
+        ...taskToUpdate,
+        ...updates
+      };
+
+      // DATE CHANGED → MOVE TASK
+      if (fromDateKey !== dateKey) {
+        const toArr = prev[dateKey] || [];
+
+        return {
+          ...prev,
+          [fromDateKey]: fromArr.filter(t => t !== taskToUpdate),
+          [dateKey]: [...toArr, updatedTask]
+        };
+      }
+
+      // SAME DATE → UPDATE IN PLACE
+      return {
+        ...prev,
+        [fromDateKey]: fromArr.map(t =>
+          t === taskToUpdate ? updatedTask : t
+        )
+      };
     });
 
     setEditingTask(null);
@@ -211,9 +232,6 @@ export function TaskProvider({ children }) {
       return out;
     });
   }
-
-
-
 
   // Check if a task is complete
   function isTaskComplete(dateKey, taskId) {
