@@ -23,13 +23,28 @@ export function TaskProvider({ children }) {
   const [completedTasks, setCompletedTasks] = useState({});
 
   // Toggle completion for a specific task
+  function normalizeTaskId(taskId) {
+    return taskId.startsWith('task__')
+      ? taskId.slice(6)
+      : taskId;
+  }
+
   function toggleTaskComplete(dateKey, taskId) {
+    const cleanId = normalizeTaskId(taskId);
+
     setCompletedTasks(prev => {
       const day = prev[dateKey] || {};
-      const updated = { ...day, [taskId]: !day[taskId] };
-      return { ...prev, [dateKey]: updated };
+      return {
+        ...prev,
+        [dateKey]: {
+          ...day,
+          [cleanId]: !day[cleanId]
+        }
+      };
     });
   }
+
+
 
   function addTask(dateKey, task) {
     setTasks((prev) => {
@@ -235,8 +250,10 @@ export function TaskProvider({ children }) {
 
   // Check if a task is complete
   function isTaskComplete(dateKey, taskId) {
-    return !!(completedTasks[dateKey] && completedTasks[dateKey][taskId]);
+    const cleanId = normalizeTaskId(taskId);
+    return Boolean(completedTasks[dateKey]?.[cleanId]);
   }
+
 
 
   function addDeterministicIds(tasksObj) {
