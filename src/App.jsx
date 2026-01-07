@@ -111,48 +111,50 @@ function AppContent() {
       collisionDetection={pointerWithin}
       onDragEnd={handleDragEnd}
     >
-      <div className="app-shell">
-        <NavigationBar
-          onPrev={handlePrev}
-          onNext={handleNext}
-          monthLabel={monthLabel}
-        />
+      <div className="app-shell" style={{ position: 'relative' }}>
+        <BackgroundShapes />
 
-        <div style={{ padding: '0.5rem 0' }}>
-          <button onClick={cycleMode} className={`mode-toggle mode-${mode}`}>
-            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
-          </button>
-        </div>
+        <div className="app-content" style={{ position: 'relative', zIndex: 1 }}>
+          <NavigationBar
+            onPrev={handlePrev}
+            onNext={handleNext}
+            monthLabel={monthLabel}
+          />
 
-        <div
-          className="app-layout"
-          style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <CategoriesFilter mode={mode} />
-            <AddTaskPanel />
+          <div style={{ padding: '0.5rem 0' }}>
+            <button onClick={cycleMode} className={`mode-toggle mode-${mode}`}>
+              Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            </button>
           </div>
 
-          <div style={{ flex: 1 }}>
-            <BackgroundShapes />
-            <MonthNavigator
-              monthLabel={monthLabel}
-              onPrev={handlePrev}
-              onNext={handleNext}
-            />
+          <div
+            className="app-layout"
+            style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <CategoriesFilter mode={mode} />
+              <AddTaskPanel />
+            </div>
 
-            <CalendarGrid
-              year={current.year}
-              month={current.month}
-              onSelectDate={setSelectedDate}
-              selectedDate={selectedDate}
-              tasks={filteredTasks}
-            />
-
-            <DayView mode={mode} />
+            <div style={{ flex: 1 }}>
+              <MonthNavigator 
+                monthLabel={monthLabel} 
+                onPrev={handlePrev} 
+                onNext={handleNext} 
+              /> 
+              <CalendarGrid 
+                year={current.year} 
+                month={current.month} 
+                onSelectDate={setSelectedDate} 
+                selectedDate={selectedDate} 
+                tasks={filteredTasks} 
+              />
+              <DayView mode={mode} />
+            </div>
           </div>
         </div>
       </div>
+
     </DndContext>
   );
 }
