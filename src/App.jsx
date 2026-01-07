@@ -2,7 +2,14 @@
 // Root app component with global DnD support for moving tasks across days
 
 import React, { useState } from 'react';
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  pointerWithin
+} from '@dnd-kit/core';
+
 import { TaskProvider, useTaskStore } from './state/taskStore.jsx';
 import { ThemeProvider } from './state/themeStore.jsx';
 
@@ -32,8 +39,14 @@ function AppContent() {
     moveTask
   } = useTaskStore();
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
   function cycleMode() {
-    setMode(prev => (prev === 'select' ? 'delete' : prev === 'delete' ? 'edit' : 'select'));
+    setMode(prev =>
+      prev === 'select' ? 'delete' : prev === 'delete' ? 'edit' : 'select'
+    );
   }
 
   function handlePrev() {
@@ -56,33 +69,27 @@ function AppContent() {
     setCurrent({ year, month });
   }
 
-  const monthLabel = new Date(current.year, current.month, 1).toLocaleString(undefined, {
-    month: 'long',
-    year: 'numeric'
-  });
+  const monthLabel = new Date(current.year, current.month, 1).toLocaleString(
+    undefined,
+    { month: 'long', year: 'numeric' }
+  );
 
   const filteredTasks = getFilteredTasks();
 
-  // Top-level drag handler
   function handleDragEnd(event) {
     const { active, over } = event;
     if (!over) return;
 
     const activeId = active.id;
     const overId = over.id;
-    console.log('Drag End:', activeId, '→', overId);
-      if (activeId.startsWith('task__') && overId.startsWith('task__')) {
-        const taskId = activeId.replace(/^task__/, '');
-        const targetId = overId.replace(/^task__/, '');
-        const dateKey = taskId.split('__')[0];
 
-        // console.log('DateKey:', dateKey, 'TaskID:', taskId, 'TargetID:', targetId);
-        moveTask(
-          dateKey,
-          taskId,
-          targetId
-        );
-        return;
+    if (activeId.startsWith('task__') && overId.startsWith('task__')) {
+      const taskId = activeId.replace(/^task__/, '');
+      const targetId = overId.replace(/^task__/, '');
+      const dateKey = taskId.split('__')[0];
+
+      moveTask(dateKey, taskId, targetId);
+      return;
     }
 
     if (activeId.startsWith('task__') && overId.startsWith('day__')) {
@@ -92,19 +99,22 @@ function AppContent() {
 
       if (fromDateKey === toDateKey) return;
 
-      moveTaskToDate(
-        fromDateKey,
-        toDateKey,
-        taskId
-      );
+      moveTaskToDate(fromDateKey, toDateKey, taskId);
     }
   }
 
-
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={pointerWithin}
+      onDragEnd={handleDragEnd}
+    >
       <div className="app-shell">
-        <NavigationBar onPrev={handlePrev} onNext={handleNext} monthLabel={monthLabel} />
+        <NavigationBar
+          onPrev={handlePrev}
+          onNext={handleNext}
+          monthLabel={monthLabel}
+        />
 
         <div style={{ padding: '0.5rem 0' }}>
           <button onClick={cycleMode} className={`mode-toggle mode-${mode}`}>
@@ -112,7 +122,10 @@ function AppContent() {
           </button>
         </div>
 
-        <div className="app-layout" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+        <div
+          className="app-layout"
+          style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <CategoriesFilter mode={mode} />
             <AddTaskPanel />
