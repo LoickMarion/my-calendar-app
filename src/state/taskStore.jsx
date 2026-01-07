@@ -56,7 +56,9 @@ export function TaskProvider({ children }) {
   }
 
   function deleteTask(dateKey, taskId) {
-    const [idDate, category, indexStr] = taskId.split('__');
+
+    //first part is 'task'
+    const [__,idDate, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
     setTasks(prev => {
@@ -82,7 +84,7 @@ export function TaskProvider({ children }) {
   function startEditTask(dateKey, taskId) {
     console.log('startEditTask', dateKey, taskId);
 
-    const [idDate, category, indexStr] = taskId.split('__');
+    const [__,idDate, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
     const arr = tasks[dateKey] || [];
