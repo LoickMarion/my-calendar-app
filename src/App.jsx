@@ -116,17 +116,10 @@ function AppContent() {
 
         <div className="app-content" style={{ position: 'relative', zIndex: 1 }}>
           <NavigationBar
-            onPrev={handlePrev}
-            onNext={handleNext}
-            monthLabel={monthLabel}
+            mode={mode}
+            cycleMode={cycleMode}
           />
-
-          <div style={{ padding: '0.5rem 0' }}>
-            <button onClick={cycleMode} className={`mode-toggle mode-${mode}`}>
-              Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
-            </button>
-          </div>
-
+          
           <div
             className="app-layout"
             style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}

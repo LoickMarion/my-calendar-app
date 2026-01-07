@@ -86,7 +86,7 @@ export default function ThemeSettings() {
             applied++;
           }
         });
-        setMsg(`Imported ${applied} values`);
+        setMsg(``);
       } catch (err) {
         console.error(err);
         setMsg('Import failed');

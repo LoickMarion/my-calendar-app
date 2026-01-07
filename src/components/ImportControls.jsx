@@ -52,7 +52,6 @@ export default function ImportControls() {
         <input type="checkbox" checked={replace} onChange={(e) => setReplace(e.target.checked)} />
         <span>Replace existing tasks & categories</span>
       </label>
-      <div className="import-status" aria-live="polite" style={{ fontSize: '0.85rem', color: '#555' }}>{status}</div>
     </div>
   );
 }
