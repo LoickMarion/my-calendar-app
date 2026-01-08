@@ -15,10 +15,9 @@ export default function DayView({ mode = 'select' }) {
       <h2>
         {selectedDate.toLocaleDateString(undefined, {
           weekday: 'long',
-          year: 'numeric',
           month: 'long',
           day: 'numeric'
-        })}
+        }).replace(',', ', ')}
       </h2>
 
       <TaskList tasks={tasks} dateKey={dateKey} mode={mode} />

@@ -33,6 +33,7 @@ import './styles/components/CategoriesFilter.css';
 import './styles/components/DayView.css';
 import './styles/components/ThemeSettings.css';
 import './styles/components/AdvancedOptions.css';
+import './styles/components/ModeToggle.css';
 
 
 function AppContent() {

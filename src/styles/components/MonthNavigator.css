@@ -5,10 +5,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-lg);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-lg);
 }
 
 .month-label {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.6rem;
 }

@@ -6,7 +6,7 @@ export default function ModeToggle({ mode, cycleMode }) {
   return (
     <button
       onClick={cycleMode}
-      className={`mode-toggle mode-${mode}`}
+      className={`btn mode-toggle mode-${mode}`}
     >
       Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
     </button>
