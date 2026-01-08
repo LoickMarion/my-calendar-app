@@ -43,7 +43,7 @@ export default function ThemeSettings() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      setMsg('Exported theme to ' + filename);
+      setMsg('');
     } catch (err) {
       console.error(err);
       setMsg('Export failed');
