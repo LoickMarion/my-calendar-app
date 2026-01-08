@@ -155,7 +155,7 @@ return (
     >
       {/* Task Text */}
       <div>
-        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem' }}>
           Task Text
         </label>
         <input
@@ -169,7 +169,7 @@ return (
 
       {/* Category */}
       <div>
-        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+        <label style={{ display: 'block', marginTop: '0.25rem',marginBottom: '0.5rem' }}>
           Category
         </label>
         <select
@@ -197,8 +197,8 @@ return (
       </div>
 
       {/* Date */}
-      <div style={{ marginBottom: '0.5rem' }}> {/* Add space before button */}
-        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+      <div style={{ marginTop: '0.25rem', marginBottom: '0.75rem' }}> {/* Add space before button */}
+        <label style={{ display: 'block', marginBottom: '0.5rem' }}>
           Date
         </label>
         <input
