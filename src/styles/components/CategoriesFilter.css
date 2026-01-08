@@ -1,0 +1,15 @@
+/* components/CategoriesFilter.css */
+
+.categories-filter {
+  width: var(--sidebar-left-width);
+  max-height: 60vh;
+  overflow: auto;
+  padding: var(--space-sm);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.categories-filter .category-list li {
+  padding: var(--space-xs) 0;
+}

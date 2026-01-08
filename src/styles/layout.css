@@ -1,0 +1,65 @@
+/* layout.css - app shell, layout, sidebars, month navigator */
+
+.app-shell {
+  padding: var(--space-lg);
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.app-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.app-layout {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+/* Sidebars */
+.sidebar-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: var(--sidebar-left-width);
+  flex-shrink: 0;
+}
+
+.sidebar-right {
+  width: var(--sidebar-right-width);
+  flex-shrink: 0;
+}
+
+/* Main calendar column */
+.calendar-column {
+  flex: 1;
+  min-width: 0; /* prevents overflow */
+}
+
+/* Month navigator panel */
+.month-navigator {
+  padding: var(--space-sm);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar-left,
+  .sidebar-right {
+    width: 100%;
+  }
+}

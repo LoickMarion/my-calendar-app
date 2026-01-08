@@ -1,0 +1,14 @@
+/* components/MonthNavigator.css */
+
+.month-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.month-label {
+  font-weight: 600;
+  font-size: 1rem;
+}

@@ -1,6 +1,4 @@
 // App.jsx
-// Root app component with global DnD support for moving tasks across days
-
 import React, { useState } from 'react';
 import {
   DndContext,
@@ -22,8 +20,20 @@ import BackgroundShapes from './components/BackgroundShapes';
 import AddTaskPanel from './components/AddTaskPanel';
 import MonthNavigator from './components/MonthNavigator';
 
-
+/* Import the split CSS files */
 import './styles/globals.css';
+import './styles/layout.css';
+// import './styles/components.css';
+import './styles/calendar.css';
+import './styles/components/buttons.css';
+import './styles/components/NavigationBar.css';
+import './styles/components/MonthNavigator.css';
+import './styles/components/AddTaskPanel.css';
+import './styles/components/CategoriesFilter.css';
+import './styles/components/DayView.css';
+import './styles/components/ThemeSettings.css';
+import './styles/components/AdvancedOptions.css';
+
 
 function AppContent() {
   const [current, setCurrent] = useState(() => {
@@ -33,22 +43,14 @@ function AppContent() {
 
   const [mode, setMode] = useState('select');
 
-  const {
-    selectedDate,
-    setSelectedDate,
-    getFilteredTasks,
-    moveTaskToDate,
-    moveTask
-  } = useTaskStore();
+  const { selectedDate, setSelectedDate, getFilteredTasks, moveTaskToDate, moveTask } = useTaskStore();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
   function cycleMode() {
-    setMode(prev =>
-      prev === 'select' ? 'delete' : prev === 'delete' ? 'edit' : 'select'
-    );
+    setMode(prev => (prev === 'select' ? 'delete' : prev === 'delete' ? 'edit' : 'select'));
   }
 
   function handlePrev() {
@@ -89,7 +91,6 @@ function AppContent() {
       const taskId = activeId.replace(/^task__/, '');
       const targetId = overId.replace(/^task__/, '');
       const dateKey = taskId.split('__')[0];
-
       moveTask(dateKey, taskId, targetId);
       return;
     }
@@ -98,56 +99,55 @@ function AppContent() {
       const taskId = activeId.replace(/^task__/, '');
       const fromDateKey = taskId.split('__')[0];
       const toDateKey = overId.replace(/^day__/, '');
-
       if (fromDateKey === toDateKey) return;
-
       moveTaskToDate(fromDateKey, toDateKey, taskId);
     }
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="app-shell" style={{ position: 'relative' }}>
+    <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
+      <div className="app-shell">
         <BackgroundShapes />
 
-        <div className="app-content" style={{ position: 'relative', zIndex: 1 }}>
-          <NavigationBar
-            mode={mode}
-            cycleMode={cycleMode}
-          />
-          
-          <div
-            className="app-layout"
-            style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="app-content">
+
+          {/* NAVIGATION BAR */}
+          <NavigationBar mode={mode} cycleMode={cycleMode} />
+
+          {/* THREE-COLUMN LAYOUT */}
+          <div className="app-layout">
+
+            {/* LEFT SIDEBAR */}
+            <aside className="sidebar-left">
               <CategoriesFilter mode={mode} />
               <AddTaskPanel />
-            </div>
+            </aside>
 
-            <div style={{ flex: 1 }}>
-              <MonthNavigator 
-                monthLabel={monthLabel} 
-                onPrev={handlePrev} 
-                onNext={handleNext} 
-              /> 
-              <CalendarGrid 
-                year={current.year} 
-                month={current.month} 
-                onSelectDate={setSelectedDate} 
-                selectedDate={selectedDate} 
-                tasks={filteredTasks} 
+            {/* MIDDLE COLUMN — calendar */}
+            <main className="calendar-column">
+              <MonthNavigator
+                monthLabel={monthLabel}
+                onPrev={handlePrev}
+                onNext={handleNext}
               />
+
+              <CalendarGrid
+                year={current.year}
+                month={current.month}
+                onSelectDate={setSelectedDate}
+                selectedDate={selectedDate}
+                tasks={filteredTasks}
+              />
+            </main>
+
+            {/* RIGHT SIDEBAR — day view */}
+            <aside className="sidebar-right">
               <DayView mode={mode} />
-            </div>
+            </aside>
+
           </div>
         </div>
       </div>
-
     </DndContext>
   );
 }

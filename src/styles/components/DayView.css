@@ -1,0 +1,10 @@
+/* components/DayView.css */
+
+.day-view {
+  padding: var(--space-md);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}

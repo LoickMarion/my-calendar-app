@@ -223,7 +223,7 @@ export default function AddTaskPanel({ className = "" }) {
           <button
             type="button"
             onClick={cancelEditTask}
-            className="cancel-edit-button"
+            className="btn cancel-edit-button"
           >
             Cancel
           </button>

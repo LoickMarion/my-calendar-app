@@ -43,15 +43,31 @@ export default function ImportControls() {
   }
 
   return (
-    <div className="import-controls" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-      <label className="file-label">
-        <input type="file" accept=".csv,text/csv" onChange={handleFileChange} />
-        <span className="file-button">Choose file</span>
+  <div className="import-controls">
+    {/* File picker container */}
+    <div className="file-picker">
+      <label className="btn file-button">
+        Choose file
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={handleFileChange}
+        />
       </label>
-      <label style={{ display: 'flex', gap: '0.25rem', alignItems: 'center', fontSize: '0.9rem' }}>
-        <input type="checkbox" checked={replace} onChange={(e) => setReplace(e.target.checked)} />
-        <span>Replace existing tasks & categories</span>
-      </label>
+      <span className="file-instruction">Upload a CSV file</span>
     </div>
+
+    {/* Checkbox container */}
+    <div className="replace-toggle">
+      <input
+        type="checkbox"
+        id="replace-checkbox"
+        checked={replace}
+        onChange={(e) => setReplace(e.target.checked)}
+      />
+      <label htmlFor="replace-checkbox">Replace existing tasks & categories</label>
+    </div>
+  </div>
+
   );
 }

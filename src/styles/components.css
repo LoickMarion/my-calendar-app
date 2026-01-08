@@ -1,0 +1,233 @@
+/* components.css - buttons, panels, inputs, categories filter, day view */
+
+/* Unified button base class */
+.btn {
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 78px;
+  margin-bottom: var(--space-sm);
+  transition: box-shadow 0.15s, transform 0.1s;
+}
+
+.btn:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.12);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mode buttons */
+.mode-select { background: var(--tile-bg); color: var(--text-color); }
+.mode-delete { background: red; border-color: #e88; color: var(--text-color); }
+.mode-edit { background: purple; border-color: #aac; color: var(--text-color); }
+
+/* Navigation bar */
+.navigation-bar {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Panels */
+.add-task-panel-root,
+.day-view {
+  padding: var(--space-md);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}
+
+.add-task-panel-root h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-sm);
+}
+
+/* Categories filter */
+.categories-filter {
+  width: var(--sidebar-left-width);
+  max-height: 60vh;
+  overflow: auto;
+  padding: var(--space-sm);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.categories-filter .category-list li {
+  padding: var(--space-xs) 0;
+}
+
+/* Inputs / selects / textarea */
+.add-task-panel-root input,
+.add-task-panel-root select,
+.add-task-panel-root textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.cancel-edit-button:hover {
+  background-color: hsl(0, 60%, 70%);
+}
+
+/* Import controls wrapper */
+.import-controls {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.file-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.file-button {
+  position: relative;
+  display: inline-block;
+
+}
+
+.file-button input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+
+.file-instruction {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.replace-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.9rem;
+}
+
+.replace-toggle input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.month-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.month-label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.theme-settings-dropdown {
+  position: absolute;
+  right: 0;
+  top: 2.5rem;
+  z-index: 40;
+  width: 360px;
+  padding: var(--space-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-radius: var(--radius-md);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+}
+
+.theme-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.theme-settings-header-buttons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.theme-settings-export {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.export-buttons {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.file-picker input[type="file"] {
+  display: none;
+}
+
+.export-msg {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.theme-font-presets {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.font-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.theme-color-pickers {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.theme-color-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}

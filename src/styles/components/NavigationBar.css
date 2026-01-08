@@ -1,0 +1,10 @@
+/* components/NavigationBar.css */
+
+.navigation-bar {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

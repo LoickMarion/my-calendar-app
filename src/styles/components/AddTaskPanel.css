@@ -1,0 +1,71 @@
+/* components/AddTaskPanel.css */
+
+.add-task-panel-root {
+  padding: var(--space-md);
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  user-select: none;
+  caret-color: transparent;
+}
+
+.add-task-panel-root h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-sm);
+}
+
+.add-task-panel-root input,
+.add-task-panel-root select,
+.add-task-panel-root textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cancel-edit-button:hover {
+  background-color: hsl(0, 60%, 70%);
+}
+
+/* Import controls */
+.import-controls {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.file-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.file-button {
+  position: relative;
+  display: inline-block;
+}
+
+.file-button input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-instruction {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.replace-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.9rem;
+}
+
+.replace-toggle input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
