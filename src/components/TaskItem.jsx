@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 
 export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
   const {

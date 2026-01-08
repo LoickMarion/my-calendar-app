@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 
 export default function CategoriesFilter({ mode = 'select' }) {
   const {

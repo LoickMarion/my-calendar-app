@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { csvToTasks } from '../../data/parseCsv.js';
-import { useTaskStore } from '../../state/taskStore.jsx';
+import { useTaskStore } from '../../state/taskStore/index.jsx';
 
 export default function ImportControls() {
   const fileInputRef = useRef(null);

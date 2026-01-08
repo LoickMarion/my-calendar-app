@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 import TaskList from './TaskList.jsx';
 
 export default function DayView({ mode = 'select' }) {

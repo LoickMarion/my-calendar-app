@@ -3,7 +3,7 @@
 
 import React from 'react';
 import CalendarTile from './CalendarTile';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 import { DndContext } from '@dnd-kit/core';
 
 export default function CalendarGrid({ year, month, onSelectDate, selectedDate }) {

@@ -3,7 +3,7 @@
 // Uses SortableContext for drag-and-drop within the group
 
 import React from 'react';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableTaskItem from './SortableTaskItem.jsx';
 

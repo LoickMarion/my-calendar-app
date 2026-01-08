@@ -2,7 +2,7 @@
 // Global task creation + editing panel
 
 import React, { useState, useEffect } from 'react';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useTaskStore } from '../state/taskStore/index.jsx';
 
 export default function AddTaskPanel({ className = "" }) {
   const {

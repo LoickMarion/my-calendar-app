@@ -8,7 +8,7 @@ import {
   pointerWithin
 } from '@dnd-kit/core';
 
-import { TaskProvider, useTaskStore } from './state/taskStore.jsx';
+import { TaskProvider, useTaskStore } from './state/taskStore/index.jsx';
 import { ThemeProvider } from './state/themeStore.jsx';
 
 import NavigationBar from './components/nav/NavigationBar.jsx';
