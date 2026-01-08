@@ -11,7 +11,7 @@ import {
 import { TaskProvider, useTaskStore } from './state/taskStore.jsx';
 import { ThemeProvider } from './state/themeStore.jsx';
 
-import NavigationBar from './components/NavigationBar';
+import NavigationBar from './components/nav/NavigationBar.jsx';
 import CalendarGrid from './components/CalendarGrid';
 import DayView from './components/DayView';
 import CategoriesFilter from './components/CategoriesFilter';
@@ -111,8 +111,12 @@ function AppContent() {
 
         <div className="app-content">
 
-          {/* NAVIGATION BAR */}
-          <NavigationBar mode={mode} cycleMode={cycleMode} />
+          <NavigationBar
+            mode={mode}
+            cycleMode={cycleMode}
+            setCurrent={setCurrent}
+            setSelectedDate={setSelectedDate}
+          />
 
           {/* THREE-COLUMN LAYOUT */}
           <div className="app-layout">

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useThemeStore } from '../state/themeStore.jsx';
-import { useTaskStore } from '../state/taskStore.jsx';
+import { useThemeStore } from '../../state/themeStore.jsx';
+import { useTaskStore } from '../../state/taskStore.jsx';
 import AdvancedOptions from './AdvancedOptions.jsx';
 
 export default function ThemeSettings() {
@@ -86,7 +86,7 @@ export default function ThemeSettings() {
   }
 
   return (
-    <div className="theme-settings-container" style={{ position: 'relative' }}>
+    <div className="theme-settings-container" style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
       <button className="btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
         Theme
       </button>
