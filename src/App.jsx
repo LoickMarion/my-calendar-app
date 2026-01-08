@@ -23,7 +23,6 @@ import MonthNavigator from './components/MonthNavigator';
 /* Import the split CSS files */
 import './styles/globals.css';
 import './styles/layout.css';
-// import './styles/components.css';
 import './styles/calendar.css';
 import './styles/components/buttons.css';
 import './styles/components/NavigationBar.css';
