@@ -34,10 +34,10 @@ export default function CategoriesFilter({ mode = 'select' }) {
         className="categories-controls"
         style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}
       >
-        <button onClick={() => toggleAllCategories(true)} aria-label="Select all">
+        <button className="btn" onClick={() => toggleAllCategories(true)} aria-label="Select all">
           Select all
         </button>
-        <button onClick={() => toggleAllCategories(false)} aria-label="Deselect all">
+        <button className="btn" onClick={() => toggleAllCategories(false)} aria-label="Deselect all">
           Deselect all
         </button>
       </div>
@@ -78,7 +78,6 @@ export default function CategoriesFilter({ mode = 'select' }) {
             );
           } else if (mode === 'edit') {
             if (editing === cat) {
-              // show input for renaming
               control = (
                 <input
                   type="text"
@@ -102,7 +101,6 @@ export default function CategoriesFilter({ mode = 'select' }) {
                 />
               );
             } else {
-              // pencil button to trigger input
               control = (
                 <div
                   style={{
@@ -165,5 +163,6 @@ export default function CategoriesFilter({ mode = 'select' }) {
         })}
       </ul>
     </aside>
+
   );
 }
