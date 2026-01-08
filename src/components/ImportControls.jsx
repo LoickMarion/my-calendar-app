@@ -54,7 +54,6 @@ export default function ImportControls() {
           onChange={handleFileChange}
         />
       </label>
-      <span className="file-instruction">Upload a CSV file</span>
     </div>
 
     {/* Checkbox container */}

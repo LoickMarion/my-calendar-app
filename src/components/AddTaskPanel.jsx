@@ -141,102 +141,103 @@ export default function AddTaskPanel({ className = "" }) {
     }
   }
 
-  return (
-    <aside
-      className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
-    >
-      <h3>
-        {isEditing ? 'Edit Task' : 'Add Task'}
-      </h3>
+return (
+  <aside
+    className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
+  >
+    <h3>
+      {isEditing ? 'Edit Task' : 'Add Task'}
+    </h3>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column'}}
-      >
-        {/* Task Text */}
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.25rem' }}>
-            Task Text
-          </label>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', flexDirection: 'column'}}
+    >
+      {/* Task Text */}
+      <div>
+        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+          Task Text
+        </label>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          required
+          className="task-input"
+        />
+      </div>
+
+      {/* Category */}
+      <div>
+        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+          Category
+        </label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="task-input"
+        >
+          <option value="">-- Select category --</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+          <option value="__new__">➕ Create new category…</option>
+        </select>
+
+        {isCreatingNewCategory && (
           <input
             type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            required
-            style={{ width: '100%' }}
+            placeholder="New category name"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            className="task-input"
+            style={{ marginTop: '0.25rem' }}
           />
-        </div>
-
-        {/* Category */}
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.25rem' }}>
-            Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{ width: '100%' }}
-          >
-            <option value="">-- Select category --</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-            <option value="__new__">➕ Create new category…</option>
-          </select>
-
-          {isCreatingNewCategory && (
-            <input
-              type="text"
-              placeholder="New category name"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              style={{ marginTop: '0.25rem', width: '100%' }}
-            />
-          )}
-        </div>
-
-        {/* Date */}
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.25rem' }}>
-            Date
-          </label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            style={{ width: '100%' }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="add-task-button"
-          disabled={!text.trim() || !date}
-        >
-          {isEditing ? 'Save Changes' : 'Add Task'}
-        </button>
-
-        {isEditing && (
-          <button
-            type="button"
-            onClick={cancelEditTask}
-            className="btn cancel-edit-button"
-          >
-            Cancel
-          </button>
         )}
-      </form>
+      </div>
+
+      {/* Date */}
+      <div style={{ marginBottom: '0.5rem' }}> {/* Add space before button */}
+        <label style={{ display: 'block', marginBottom: '0.25rem' }}>
+          Date
+        </label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+          className="task-input"
+        />
+      </div>
 
       <button
-        type="button"
-        onClick={handleDownloadCSV}
-        className="download-csv-button"
+        type="submit"
+        className="btn"
+        disabled={!text.trim() || !date}
       >
-        Download Tasks CSV
+        {isEditing ? 'Save Changes' : 'Add Task'}
       </button>
-    </aside>
+
+      {isEditing && (
+        <button
+          type="button"
+          onClick={cancelEditTask}
+          className="btn"
+          style={{ marginTop: '0.25rem' }}
+        >
+          Cancel
+        </button>
+      )}
+    </form>
+
+    <button
+      type="button"
+      onClick={handleDownloadCSV}
+      className="btn"
+      style={{ marginTop: '0.5rem' }}
+    >
+      Download Tasks CSV
+    </button>
+  </aside>
   );
 }
