@@ -22,6 +22,9 @@ export function TaskProvider({ children }) {
   // --- Completion state ---
   const [completedTasks, setCompletedTasks] = useState({});
 
+  const [showIncompleteOnly, setShowIncompleteOnly] = useState(false);
+
+
   // Toggle completion for a specific task
   function normalizeTaskId(taskId) {
     return taskId.startsWith('task__')
@@ -42,6 +45,11 @@ export function TaskProvider({ children }) {
         }
       };
     });
+  }
+
+
+  function toggleShowIncompleteOnly() {
+    setShowIncompleteOnly(prev => !prev);
   }
 
 
@@ -97,8 +105,6 @@ export function TaskProvider({ children }) {
   }
 
   function startEditTask(dateKey, taskId) {
-    console.log('startEditTask', dateKey, taskId);
-
     const [__,idDate, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
@@ -115,12 +121,10 @@ export function TaskProvider({ children }) {
   }
 
   function cancelEditTask() {
-    console.log('cancelEditTask');
     setEditingTask(null);
   }
 
   function saveTaskEdits(dateKey, taskId, updates) {
-    console.log('saveTaskEdits', dateKey, taskId, updates);
 
     const [__, fromDateKey, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
@@ -585,7 +589,6 @@ export function TaskProvider({ children }) {
 
 
   function moveTaskToDate(sourceDateKey, targetDateKey, taskId) {
-    console.log('moveTaskToDate', sourceDateKey, targetDateKey, taskId);
     const [, category, indexStr] = taskId.split('__');
     const index = parseInt(indexStr, 10);
 
@@ -669,6 +672,8 @@ export function TaskProvider({ children }) {
       reorderTask,
       moveTask,
       moveTaskToDate,
+      showIncompleteOnly,
+      toggleShowIncompleteOnly,
     }}>
       {children}
     </TaskContext.Provider>

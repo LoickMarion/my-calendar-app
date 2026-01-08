@@ -8,7 +8,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import SortableTaskItem from './SortableTaskItem.jsx';
 
 export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
-  const { getCategoryColor } = useTaskStore();
+  const { getCategoryColor, isTaskComplete, showIncompleteOnly } = useTaskStore();
 
   // Group tasks by category
   const groups = tasks.reduce((acc, t) => {
@@ -23,36 +23,55 @@ export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
   return (
     <div className="task-list">
       <div className="task-groups">
-        {groupKeys.map((gk) => (
-          <section key={gk} className="task-group">
-            <div className="task-group-header">
-              <h3 className="task-group-title" style={{ background: getCategoryColor(gk) }}>
-                {gk}
-              </h3>
-              <span className="task-group-count">{groups[gk].length}</span>
-            </div>
+        {groupKeys.map((gk) => {
+          const groupTasks = groups[gk];
 
-            <SortableContext
-              items={groups[gk].map((t, i) => `${dateKey}__${gk}__${i}`)}
-              strategy={verticalListSortingStrategy}
-            >
-              <ul className="task-group-list">
-                {groups[gk].map((t, i) => {
-                  const id = `task__${dateKey}__${gk}__${i}`;
-                  return (
-                    <SortableTaskItem
-                      key={id}
-                      id={id}
-                      text={t.description || '(no text)'}
-                      dateKey={dateKey}
-                      mode={mode}
-                    />
-                  );
-                })}
-              </ul>
-            </SortableContext>
-          </section>
-        ))}
+          // Filter visible tasks for this group
+          const visibleTasks = showIncompleteOnly
+            ? groupTasks.filter((t, i) => {
+                const id = `task__${dateKey}__${gk}__${i}`;
+                return !isTaskComplete(dateKey, id);
+              })
+            : groupTasks;
+
+          // Skip category if no visible tasks
+          if (visibleTasks.length === 0) return null;
+
+          return (
+            <section key={gk} className="task-group">
+              <div className="task-group-header">
+                <h3
+                  className="task-group-title"
+                  style={{ background: getCategoryColor(gk) }}
+                >
+                  {gk}
+                </h3>
+                <span className="task-group-count">{visibleTasks.length}</span>
+              </div>
+
+              <SortableContext
+                items={visibleTasks.map((t) => `${dateKey}__${gk}__${groupTasks.indexOf(t)}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                <ul className="task-group-list">
+                  {visibleTasks.map((t) => {
+                    const i = groupTasks.indexOf(t); // original index
+                    const id = `task__${dateKey}__${gk}__${i}`;
+                    return (
+                      <SortableTaskItem
+                        key={id}
+                        id={id}
+                        text={t.description || '(no text)'}
+                        dateKey={dateKey}
+                        mode={mode}
+                      />
+                    );
+                  })}
+                </ul>
+              </SortableContext>
+            </section>
+          );
+        })}
       </div>
     </div>
   );
