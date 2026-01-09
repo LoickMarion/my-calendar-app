@@ -12,66 +12,77 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
         <div className="advanced-section-title">Background Shapes</div>
         <div className="advanced-subsection">
 
-          {/* Shape checkboxes + color pickers */}
-          {shapes.map((s) => (
-            <label key={s} className="advanced-label">
-              <div className="advanced-label-left">
+          {shapes.map((s) => {
+            const enabled = theme[`shape-${s}-enabled`] === 'true' || theme[`shape-${s}-enabled`] === true;
+
+            return (
+              <div key={s} className="shape-row">
+                {/* Checkbox + Color */}
+                <label className="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    checked={enabled}
+                    onChange={(e) =>
+                      setThemeVar(`shape-${s}-enabled`, e.target.checked ? 'true' : 'false')
+                    }
+                  />
+                  <span className="checkbox-custom" />
+                  <span className="checkbox-label-text">{s}</span>
+                </label>
+
                 <input
-                  type="checkbox"
-                  checked={theme[`shape-${s}-enabled`] === 'true' || theme[`shape-${s}-enabled`] === true}
-                  onChange={(e) =>
-                    setThemeVar(`shape-${s}-enabled`, e.target.checked ? 'true' : 'false')
-                  }
+                  type="color"
+                  value={theme[`shape-${s}-color`] || '#000000'}
+                  onChange={(e) => setThemeVar(`shape-${s}-color`, e.target.value)}
+                  className="color-picker"
                 />
-                <span className="advanced-label-text">{s}</span>
+
+                {/* Only render sliders if shape is enabled */}
+                {enabled && (
+                  <div className="shape-sliders-row">
+                    {/* Density */}
+                    <label className="advanced-label slider-label">
+                      <span>Density</span>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1000}
+                        value={theme[`shape-${s}-density`] || 18}
+                        onChange={(e) => setThemeVar(`shape-${s}-density`, String(e.target.value))}
+                      />
+                    </label>
+
+                    {/* Opacity */}
+                    <label className="advanced-label slider-label">
+                      <span>Opacity</span>
+                      <input
+                        type="range"
+                        min={0.02}
+                        max={1.0}
+                        step={0.02}
+                        value={Number(theme[`shape-${s}-opacity`] || 0.18)}
+                        onChange={(e) => setThemeVar(`shape-${s}-opacity`, String(e.target.value))}
+                      />
+                    </label>
+
+                    {/* Size */}
+                    <label className="advanced-label slider-label">
+                      <span>Size</span>
+                      <input
+                        type="range"
+                        min={25}
+                        max={200}
+                        value={Math.round(Number(theme[`shape-${s}-size`] || 1.0) * 100)}
+                        onChange={(e) =>
+                          setThemeVar(`shape-${s}-size`, String(Number(e.target.value) / 100))
+                        }
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
-              <input
-                type="color"
-                value={theme[`shape-${s}-color`] || '#000000'}
-                onChange={(e) => setThemeVar(`shape-${s}-color`, e.target.value)}
-              />
-            </label>
-          ))}
-
-          {/* Sliders row: Density / Opacity / Size */}
-          <div className="shape-settings-row">
-            {/* Density */}
-            <label className="advanced-label slider-label">
-              <span>Density</span>
-              <input
-                type="range"
-                min={4}
-                max={200}  // increased max
-                value={theme['shapes-density'] || 18}
-                onChange={(e) => setThemeVar('shapes-density', String(e.target.value))}
-              />
-            </label>
-
-            {/* Opacity */}
-            <label className="advanced-label slider-label">
-              <span>Opacity</span>
-              <input
-                type="range"
-                min={0.02}
-                max={1.0}
-                step={0.02}
-                value={Number(theme['shapes-opacity'] || 0.18)}
-                onChange={(e) => setThemeVar('shapes-opacity', String(e.target.value))}
-              />
-            </label>
-
-            {/* Size multiplier */}
-            <label className="advanced-label slider-label">
-              <span>Size</span>
-              <input
-                type="range"
-                min={25}
-                max={200}
-                value={Math.round(Number(theme['shapes-size'] || 1.0) * 100)}
-                onChange={(e) => setThemeVar('shapes-size', String(Number(e.target.value) / 100))}
-              />
-            </label>
-          </div>
+            );
+          })}
 
           {/* Other options row */}
           <div className="shape-settings-row controls-row">
@@ -100,7 +111,6 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
               />
             </div>
           </div>
-
         </div>
       </div>
 

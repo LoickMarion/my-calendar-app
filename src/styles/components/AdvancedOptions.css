@@ -1,10 +1,13 @@
+/* ===============================
+   Advanced Options Container
+   =============================== */
+
 .theme-advanced-options {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   border-top: 1px solid var(--border-color);
-  padding-top: var(--space-sm);
-  padding-bottom: var(--space-sm);
+  padding: var(--space-sm) 0;
 }
 
 .theme-advanced-options summary.advanced-summary {
@@ -15,6 +18,10 @@
   margin-bottom: var(--space-sm);
 }
 
+/* ===============================
+   Sections
+   =============================== */
+
 .advanced-section {
   display: flex;
   flex-direction: column;
@@ -24,7 +31,6 @@
 .advanced-section-title {
   font-weight: 600;
   font-size: 0.9rem;
-  margin-bottom: var(--space-xs);
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 2px;
 }
@@ -33,105 +39,97 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding-left: var(--space-xs);
 }
 
-.advanced-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-sm);
-}
+/* ===============================
+   Shape Row Layout
+   =============================== */
 
-.advanced-label-left {
+.shape-row {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 12px;
+  width: 100%;           /* full width so auto-margin works */
+  flex-wrap: wrap;
 }
 
-.advanced-label-left input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+/* ===============================
+   Checkbox + Label
+   =============================== */
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
 }
 
-.advanced-label input[type="color"] {
-  width: 36px;
-  height: 24px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-}
+/* ===============================
+   Sliders
+   =============================== */
 
-/* Make all sliders the same size */
-.advanced-slider-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-  margin-bottom: var(--space-sm);
-}
-
-.advanced-slider-group label,
-.slider-label {
+.shape-sliders-row {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-}
-
-.advanced-slider-group input[type="range"],
-.slider-label input[type="range"] {
-  flex-grow: 1;
-  max-width: 220px; /* uniform slider width */
-}
-
-.slider-label span {
-  min-width: 70px;
-  display: inline-block;
-}
-
-
-.shape-settings-row {
-  display: flex;
-  gap: 1.5rem;          /* slightly tighter spacing */
-  align-items: center;
-  margin-bottom: var(--space-md);
-  flex-wrap: wrap;       /* allow wrapping on very narrow screens */
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .advanced-label.slider-label {
   display: flex;
   flex-direction: column;
-  font-size: 0.85rem;
+  align-items: center;
+  min-width: 80px;
+  font-size: 0.8rem;
   color: var(--text-color);
 }
 
-.advanced-label.slider-label input[type="range"] {
-  margin-top: 0.25rem;
-  width: 90px;          /* narrower slider */
-  min-width: 70px;      /* prevent too small on tiny screens */
+.advanced-label.slider-label span {
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+  text-align: center;
 }
+
+.advanced-label.slider-label input[type="range"] {
+  width: 80px;
+}
+
+/* ===============================
+   Color Picker — FAR RIGHT
+   =============================== */
+
+.color-picker {
+  margin-left: auto;     /* THIS is the key line */
+  width: 36px;
+  height: 24px;
+  border: 1px solid var(--border-color);
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+
 
 .shape-settings-row.controls-row {
   display: flex;
-  gap: 2rem;               /* space between items */
-  align-items: flex-start;  /* align label + control */
-  flex-wrap: wrap;          /* wrap on narrow screens */
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .control-item {
   display: flex;
-  flex-direction: column;  /* label on top, control underneath */
+  flex-direction: column;
   gap: 0.25rem;
 }
 
 .control-label {
   font-size: 0.85rem;
-  color: var(--text-color);
 }
 
-/* Text input styling */
 .control-input {
-  width: 100px;            /* adjust to fit nicely */
+  width: 100px;
   padding: 0.25rem 0.5rem;
   font-size: 0.85rem;
   border: 1px solid var(--border-color);
@@ -139,3 +137,13 @@
 }
 
 
+@media (max-width: 600px) {
+  .shape-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .color-picker {
+    margin-left: 0;
+  }
+}

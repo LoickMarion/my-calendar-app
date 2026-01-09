@@ -11,11 +11,17 @@ function mulberry32(a) {
   };
 }
 
+// Generate positions
 function makePositions(seed, count) {
   const rnd = mulberry32(Number(seed) || 1);
   const out = [];
   for (let i = 0; i < count; i++) {
-    out.push({ x: Math.round(rnd() * 10000) / 100, y: Math.round(rnd() * 10000) / 100, r: Math.round(rnd() * 360), s: Math.round(18 + rnd() * 90) });
+    out.push({
+      x: Math.round(rnd() * 10000) / 100,
+      y: Math.round(rnd() * 10000) / 100,
+      r: Math.round(rnd() * 360),
+      s: Math.round(18 + rnd() * 90),
+    });
   }
   return out;
 }
@@ -32,7 +38,7 @@ function Shape({ type, x, y, r, s, color, opacity = 0.18, blend = 'multiply' }) 
     opacity: opacity,
     mixBlendMode: blend,
     filter: 'blur(0.2px)',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   };
 
   switch (type) {
@@ -80,42 +86,49 @@ function Shape({ type, x, y, r, s, color, opacity = 0.18, blend = 'multiply' }) 
 export default function BackgroundShapes() {
   const { theme } = useThemeStore();
 
-  // parse density and seed
-  const density = Math.max(4, Number(theme['shapes-density'] || 18));
   const seed = theme['shapes-seed'] || '1';
-  const opacity = Number(theme['shapes-opacity'] || 0.18);
-  const sizeMul = Number(theme['shapes-size'] || 1.0) || 1.0;
   const onTop = theme['shapes-on-top'] === 'true' || theme['shapes-on-top'] === true;
 
-  // determine enabled shapes
-  const shapes = [
-    'hearts',
-    'circles',
-    'stars',
-    'clouds',
-    'triangles',
-    'sparkles'
-  ].filter((t) => (theme[`shape-${t}-enabled`] === true || theme[`shape-${t}-enabled`] === 'true'));
+  const shapes = ['hearts', 'circles', 'stars', 'clouds', 'triangles', 'sparkles'].filter(
+    (s) => theme[`shape-${s}-enabled`] === 'true' || theme[`shape-${s}-enabled`] === true
+  );
 
-  // build positions deterministically per shape type
   const layout = useMemo(() => {
     const out = {};
     shapes.forEach((s, idx) => {
-      const count = Math.max(0, Math.floor(density));
-      out[s] = makePositions(Number(seed) + idx * 1009, count);
+      const count = Math.max(0, Math.floor(Number(theme[`shape-${s}-density`]) || 18));
+      const positions = makePositions(Number(seed) + idx * 1009, count);
+      const opacity = Number(theme[`shape-${s}-opacity`] || 0.18);
+      const sizeMul = Number(theme[`shape-${s}-size`] || 1.0);
+
+      out[s] = positions.map((p) => ({
+        ...p,
+        opacity,
+        sizeMul,
+      }));
     });
     return out;
-  }, [shapes.join(','), density, seed]);
+  }, [shapes.join(','), theme, seed]);
 
   if (shapes.length === 0) return null;
 
   return (
     <div className="background-shapes" aria-hidden>
-      {shapes.map((type) => (
+      {shapes.map((type) =>
         layout[type].map((p, i) => (
-          <Shape key={`${type}-${i}`} type={type} x={p.x} y={p.y} r={p.r} s={Math.max(6, Math.round(p.s * sizeMul))} color={theme[`shape-${type}-color`] || '#cbd5e1'} opacity={opacity} blend={onTop ? 'normal' : 'multiply'} />
+          <Shape
+            key={`${type}-${i}`}
+            type={type}
+            x={p.x}
+            y={p.y}
+            r={p.r}
+            s={Math.max(6, Math.round(p.s * p.sizeMul))}
+            color={theme[`shape-${type}-color`] || '#cbd5e1'}
+            opacity={p.opacity}
+            blend={onTop ? 'normal' : 'multiply'}
+          />
         ))
-      ))}
+      )}
 
       <style>{`
         .background-shapes { position: fixed; inset: 0; z-index: ${onTop ? 9999 : 0}; pointer-events: none; }
