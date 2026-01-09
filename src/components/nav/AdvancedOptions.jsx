@@ -38,8 +38,8 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
             <span>Density</span>
             <input
               type="range"
-              min={4}
-              max={60}
+              min={0}
+              max={1000}
               value={theme['shapes-density'] || 18}
               onChange={(e) => setThemeVar('shapes-density', String(e.target.value))}
             />
@@ -52,7 +52,7 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
               <input
                 type="range"
                 min={0.02}
-                max={0.6}
+                max={1.0}
                 step={0.02}
                 value={Number(theme['shapes-opacity'] || 0.18)}
                 onChange={(e) => setThemeVar('shapes-opacity', String(e.target.value))}
@@ -63,8 +63,8 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
               <span>Size multiplier</span>
               <input
                 type="range"
-                min={50}
-                max={300}
+                min={25}
+                max={200}
                 value={Math.round(Number(theme['shapes-size'] || 1.0) * 100)}
                 onChange={(e) => setThemeVar('shapes-size', String(Number(e.target.value) / 100))}
               />

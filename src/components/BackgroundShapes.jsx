@@ -101,7 +101,7 @@ export default function BackgroundShapes() {
   const layout = useMemo(() => {
     const out = {};
     shapes.forEach((s, idx) => {
-      const count = Math.max(3, Math.round(density / Math.max(1, shapes.length)) + 2);
+      const count = Math.max(0, Math.floor(density));
       out[s] = makePositions(Number(seed) + idx * 1009, count);
     });
     return out;
