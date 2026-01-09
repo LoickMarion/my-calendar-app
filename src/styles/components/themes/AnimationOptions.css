@@ -1,0 +1,5 @@
+.theme-select {
+    background-color: var(--tile-bg);
+    font-family: var(--font-family);
+    color: var(--text-color);
+}

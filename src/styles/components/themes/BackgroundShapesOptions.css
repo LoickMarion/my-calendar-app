@@ -134,6 +134,10 @@
   font-size: 0.85rem;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
+  background-color: var(--tile-bg);
+  font-family: var(--font-family);
+  color: var(--text-color);
+
 }
 
 

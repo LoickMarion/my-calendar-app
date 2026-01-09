@@ -1,0 +1,317 @@
+/* celebration.css */
+
+/* Shared full-screen overlay */
+.confetti-container,
+.sparkle-container,
+.fireworks-container,
+.ribbon-container,
+.glowpulse-container {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+}
+
+/* Center anchor for some effects */
+.celebration-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------------------------------- */
+/* EXPLOSIVE CONFETTI BURST           */
+/* ---------------------------------- */
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  background: hsl(calc(var(--hue)), 85%, 60%);
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  border-radius: 2px;
+  animation: confetti-explosive 1.2s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  opacity: 0;
+}
+
+@keyframes confetti-explosive {
+  0% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(0, 0)
+      rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(cos(var(--angle)) * 40px),
+        calc(sin(var(--angle)) * 40px)
+      )
+      rotate(120deg);
+  }
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(cos(var(--angle)) * var(--distance)),
+        calc(sin(var(--angle)) * var(--distance) + 80px)
+      )
+      rotate(540deg);
+  }
+}
+
+/* ---------------------------------- */
+/* MAGICAL SPARKLE GLOW               */
+/* ---------------------------------- */
+
+.sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  animation: sparkle-magical 1.4s ease-out forwards;
+  opacity: 0;
+
+  background: radial-gradient( circle, hsl(var(--sparkle-hue), 90%, 85%), rgba(255,255,255,0) ); 
+  filter: drop-shadow(0 0 6px hsl(var(--sparkle-hue), 90%, 70%));
+}
+
+@keyframes sparkle-magical {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(0, 0)
+      scale(0.2);
+  }
+  25% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(cos(var(--angle)) * 10px),
+        calc(sin(var(--angle)) * 10px)
+      )
+      scale(1);
+  }
+  70% {
+    opacity: 0.9;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(cos(var(--angle)) * var(--radius)),
+        calc(sin(var(--angle)) * var(--radius))
+      )
+      scale(1.4);
+  }
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(cos(var(--angle)) * calc(var(--radius) + 10px)),
+        calc(sin(var(--angle)) * calc(var(--radius) + 10px))
+      )
+      scale(1.6);
+  }
+}
+
+/* ---------------------------------- */
+/* SPECTACULAR FIREWORKS              */
+/* ---------------------------------- */
+
+.fireworks-launch {
+  position: absolute;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to top, rgba(255,255,255,0), rgba(255,255,255,0.9));
+  top: 100%;
+  left: 50%;
+  transform-origin: bottom center;
+  animation: fireworks-launch 0.5s cubic-bezier(0.3, 0.7, 0.4, 1) forwards;
+  opacity: 0.9;
+}
+
+@keyframes fireworks-launch {
+  0% {
+    transform: translate(-50%, 0) scaleY(0.2);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -260px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+.fireworks-burst {
+  position: absolute;
+  top: calc(50% - 130px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.firework-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(calc(var(--hue)), 90%, 60%);
+  box-shadow: 0 0 10px rgba(255,255,255,0.9);
+  animation: fireworks-particle 3.1s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fireworks-particle {
+  0% {
+    opacity: 1;
+    transform:
+      translate(0, 0)
+      scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform:
+      translate(
+        calc(cos(var(--angle)) * var(--radius)),
+        calc(sin(var(--angle)) * var(--radius))
+      )
+      scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform:
+      translate(
+        calc(cos(var(--angle)) * (var(--radius) + 20px)),
+        calc(sin(var(--angle)) * (var(--radius) + 20px))
+      )
+      scale(0.8);
+  }
+}
+
+
+.fireworks-ring {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  animation: fireworks-ring 2.9s ease-out forwards;
+}
+
+@keyframes fireworks-ring {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.4);
+  }
+}
+
+/* ---------------------------------- */
+/* DYNAMIC RIBBON BURST               */
+/* ---------------------------------- */
+
+.ribbon {
+  position: absolute;
+  width: 80px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    hsl(calc(var(--hue)), 85%, 60%),
+    hsl(calc(var(--hue) + 40), 85%, 55%)
+  );
+  top: 50%;
+  left: 50%;
+  transform-origin: left center;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
+  animation: ribbon-dynamic 2.1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes ribbon-dynamic {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      rotate(calc(var(--angle) - 40deg))
+      scaleX(0.1);
+  }
+  30% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      rotate(calc(var(--angle) + 10deg))
+      scaleX(1.1);
+  }
+  70% {
+    opacity: 0.9;
+    transform:
+      translate(
+        calc(-50% + cos(var(--angle)) * 40px),
+        calc(-50% + sin(var(--angle)) * 40px)
+      )
+      rotate(calc(var(--angle) + 40deg))
+      scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform:
+      translate(
+        calc(-50% + cos(var(--angle)) * 80px),
+        calc(-50% + sin(var(--angle)) * 80px)
+      )
+      rotate(calc(var(--angle) + 80deg))
+      scaleX(0.6);
+  }
+}
+
+/* ---------------------------------- */
+/* ELEGANT GLOW PULSE                 */
+/* ---------------------------------- */
+
+.glowpulse {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient( circle, hsl(var(--pulse-hue), 90%, 80%), rgba(255,255,255,0) );
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  opacity: 0;
+  filter: blur(1px);
+  animation: glowpulse-elegant 1.7s ease-out forwards;
+}
+
+@keyframes glowpulse-elegant {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}

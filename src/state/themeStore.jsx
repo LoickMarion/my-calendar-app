@@ -73,6 +73,11 @@ const DEFAULT_THEME = {
 
   //title case vs lower case
   'text-case': 'title',
+
+  //animation
+  'completion-animation': 'none',
+  'last-celebrated-date': "",
+
 };
 
 function applyTheme(theme) {

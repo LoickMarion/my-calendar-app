@@ -1,6 +1,7 @@
 import React from 'react';
 import BackgroundShapesOptions from './BackgroundShapesOptions';
 import CustomBulletPoints from './CustomBulletPoints';
+import AnimationOptions from './AnimationOptions.jsx';
 import CaseText from '../../CaseText.jsx';
 
 export default function AdvancedOptions({ theme, setThemeVar }) {
@@ -33,7 +34,7 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
       <div className="advanced-section">
         <div className="advanced-section-title"><CaseText>Animations</CaseText></div>
         <div className="advanced-subsection">
-          {/* TODO */}
+          <AnimationOptions theme={theme} setThemeVar={setThemeVar} />
         </div>
       </div>
     </details>
