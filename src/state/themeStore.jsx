@@ -64,7 +64,12 @@ const DEFAULT_THEME = {
   'shape-sparkles-size': '1.0',
 
   /* visibility controls */
-  'shapes-on-top': 'false'
+  'shapes-on-top': 'false',
+
+  /* Bullet points customization */
+  'bullet-svg-spacing': 10,       
+  'bullet-svg-size': 24, 
+  'bullet-svg': null,
 };
 
 function applyTheme(theme) {

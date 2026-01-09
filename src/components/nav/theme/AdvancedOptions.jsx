@@ -1,5 +1,6 @@
 import React from 'react';
 import BackgroundShapesOptions from './BackgroundShapesOptions';
+import CustomBulletPoints from './CustomBulletPoints';
 
 export default function AdvancedOptions({ theme, setThemeVar }) {
   return (
@@ -18,10 +19,12 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
       </div>
 
       {/* Bullet Points (future) */}
-      <div className="advanced-section">
-        <div className="advanced-section-title">Bullet Points</div>
+          <div className="advanced-section">
         <div className="advanced-subsection">
-          {/* TODO */}
+          <CustomBulletPoints
+            theme={theme}
+            setThemeVar={setThemeVar}
+          />
         </div>
       </div>
 

@@ -34,6 +34,7 @@ import './styles/components/themes/ThemeSettings.css';
 import './styles/components/themes/BackgroundShapesOptions.css'
 import './styles/components/ModeToggle.css';
 import './styles/components/TaskItem.css';
+import './styles/components/themes/CustomBulletPoints.css';
 
 
 function AppContent() {

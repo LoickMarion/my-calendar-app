@@ -1,0 +1,58 @@
+/* Container for bullet points picker */
+.bullet-style-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* force 4 columns */
+  gap: 10px;
+  margin-top: var(--space-sm);
+}
+
+/* Each bullet option box */
+.bullet-style-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 2px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background-color 0.2s;
+  min-height: 24px;
+}
+
+/* Highlight selected bullet */
+.bullet-style-option.active {
+  border-color: var(--accent);
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+/* Icon preview inside the box */
+.bullet-style-option svg {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 3px;
+}
+
+/* Label text under icon */
+.bullet-style-option .bullet-label {
+  font-size: 0.65rem;
+  line-height: 1.1;
+  color: var(--text-color);
+  margin-top: 1px;
+  opacity: 0.85;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .bullet-style-grid {
+    grid-template-columns: repeat(3, 1fr); /* shrink to 3 columns on mobile */
+    gap: 6px;
+  }
+  .bullet-style-option svg {
+    width: 18px;
+    height: 18px;
+  }
+  .bullet-style-option .bullet-label {
+    font-size: 0.6rem;
+  }
+}
