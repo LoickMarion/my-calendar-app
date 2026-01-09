@@ -60,14 +60,20 @@ export default function ImportControls() {
 
       {/* Replace toggle */}
       <div className="replace-toggle">
-        <input
-          type="checkbox"
-          id="replace-checkbox"
-          checked={replace}
-          onChange={(e) => setReplace(e.target.checked)}
-        />
-        <label htmlFor="replace-checkbox"><CaseText>Replace Existing Tasks</CaseText></label>
+        <label className="checkbox-wrapper">
+          <input
+            type="checkbox"
+            checked={replace}
+            onChange={(e) => setReplace(e.target.checked)}
+          />
+          <span className="checkbox-custom" />
+        </label>
+
+        <label className="replace-label">
+          <CaseText>Replace Existing Tasks</CaseText>
+        </label>
       </div>
+
 
     </div>
   );
