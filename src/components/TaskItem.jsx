@@ -16,11 +16,12 @@ export default function TaskItem({ task, id, mode = 'select' }) {
     <span
       style={{
         display: 'inline-block',
-        width: '0.5em',
-        height: '0.5em',
+        width: '0.4em',
+        height: '0.4em',
         borderRadius: '50%',
         backgroundColor: 'currentColor',
         marginRight: '0.4em',
+        color: theme['bullet-color'],
       }}
     />
   );
