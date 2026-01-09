@@ -34,15 +34,18 @@ const { attributes, listeners, setNodeRef, transform, isDragging } =
   let actionBox = null;
   if (mode === 'select') {
     actionBox = (
+        <label className="checkbox-wrapper">
         <input
-        type="checkbox"
-        className="task-check"
-        checked={checked}
-        data-no-drag
-        onChange={() =>  {
-            console.log('Checkbox clicked for task:', id);
-            toggleTaskComplete(dateKey, id);}}
+            type="checkbox"
+            checked={checked}
+            data-no-drag
+            onChange={() => {
+            toggleTaskComplete(dateKey, id);
+            }}
         />
+        <span className="checkbox-custom" />
+        </label>
+
     );
   } else if (mode === 'delete') {
     actionBox = (

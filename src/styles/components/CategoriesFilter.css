@@ -18,3 +18,42 @@
   font-size: 0.9rem;
   color: var(--secondary-text-color);
 }
+
+
+.category-edit-icon:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+
+.category-edit-icon  {
+  width: 20px;
+  height: 20px;
+  background: var(--tile-bg);
+  color: #333;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+/* Category input for renaming */
+.category-edit-input {
+  width: 80px;
+  padding: 2px 4px;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+  background: var(--tile-bg);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.category-edit-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+

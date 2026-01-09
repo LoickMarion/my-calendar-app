@@ -151,18 +151,9 @@
   margin-left: var(--space-md);
 }
 
-.task-check {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--checkbox-check);
-  border: 1px solid var(--border-color);
-  background: transparent;
-  border-radius: 4px;
-}
 
-.task-check:checked {
-  background: var(--checkbox-bg);
-}
+
+
 
 .task-complete-x {
   position: absolute;

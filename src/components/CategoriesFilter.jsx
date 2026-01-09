@@ -50,11 +50,15 @@ export default function CategoriesFilter({ mode = 'select' }) {
           let control = null;
           if (mode === 'select') {
             control = (
-              <input
-                type="checkbox"
-                checked={enabled}
-                onChange={(e) => setCategoryEnabled(cat, e.target.checked)}
-              />
+              <label className="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  checked={enabled}
+                  onChange={(e) => setCategoryEnabled(cat, e.target.checked)}
+                />
+                <span className="checkbox-custom" />
+              </label>
+
             );
           } else if (mode === 'delete') {
             control = (
@@ -97,24 +101,13 @@ export default function CategoriesFilter({ mode = 'select' }) {
                       setEditing(null);
                     }
                   }}
-                  style={{ width: 80 }}
+                  className="category-edit-input"
                 />
               );
             } else {
               control = (
                 <div
-                  style={{
-                    background: '#eee',
-                    color: '#333',
-                    borderRadius: 4,
-                    width: 20,
-                    height: 20,
-                    fontSize: '0.8rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                  }}
+                  className="category-edit-icon"
                   aria-label={`Edit category ${cat}`}
                   onClick={() => {
                     setEditing(cat);
@@ -125,6 +118,7 @@ export default function CategoriesFilter({ mode = 'select' }) {
                 </div>
               );
             }
+
           }
 
           return (
