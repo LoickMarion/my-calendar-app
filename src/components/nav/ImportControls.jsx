@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { csvToTasks } from '../../data/parseCsv.js';
 import { useTaskStore } from '../../state/taskStore/index.jsx';
+import CaseText from '../CaseText.jsx';
 
 export default function ImportControls() {
   const fileInputRef = useRef(null);
@@ -45,7 +46,7 @@ export default function ImportControls() {
     <div className="import-controls" style={{ display: 'flex', gap: '0.5rem' }}>
       {/* Real button triggers hidden input */}
       <button className="btn" type="button" onClick={handleButtonClick}>
-        Import CSV
+        <CaseText>Import CSV</CaseText>
       </button>
 
       {/* Hidden file input */}
@@ -65,7 +66,7 @@ export default function ImportControls() {
           checked={replace}
           onChange={(e) => setReplace(e.target.checked)}
         />
-        <label htmlFor="replace-checkbox">Replace existing tasks</label>
+        <label htmlFor="replace-checkbox"><CaseText>Replace Existing Tasks</CaseText></label>
       </div>
 
     </div>

@@ -3,6 +3,7 @@ import { useThemeStore } from '../../../state/themeStore.jsx';
 import { useTaskStore } from '../../../state/taskStore/index.jsx';
 import AdvancedOptions from './AdvancedOptions.jsx';
 import { toLocalDateKey } from '../../../state/date.js';
+import CaseText from '../../CaseText.jsx';
 
 
 export default function ThemeSettings() {
@@ -90,18 +91,18 @@ export default function ThemeSettings() {
   return (
     <div className="theme-settings-container" style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
       <button className="btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
-        Theme
+        <CaseText>Theme</CaseText>
       </button>
 
       <div className={`theme-settings-panel ${open ? 'open' : 'closed'}`}>
         <div className="theme-settings-header">
-          <strong>Theme Settings</strong>
+          <strong><CaseText>Theme Settings</CaseText></strong>
           <div className="theme-settings-header-buttons">
             <button className="btn" onClick={resetDefaults} title="Reset to defaults">
-              Reset
+              <CaseText>Reset</CaseText>
             </button>
             <button className="btn" onClick={() => setOpen(false)}>
-              Close
+              <CaseText>Close</CaseText>
             </button>
           </div>
         </div>
@@ -111,10 +112,10 @@ export default function ThemeSettings() {
           <div className="theme-settings-row">
             <div className="theme-settings-row-left">
               <button className="btn" onClick={exportThemeCsv}>
-                Export (CSV)
+                <CaseText>Export (CSV)</CaseText>
               </button>
               <button className="btn" onClick={() => fileRef.current && fileRef.current.click()}>
-                Import (CSV)
+                <CaseText>Import (CSV)</CaseText>
               </button>
               <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={handleImportFile} />
             </div>
@@ -123,16 +124,16 @@ export default function ThemeSettings() {
 
           {/* Font presets */}
           <div className="theme-settings-row">
-            <span className="theme-settings-label">Font</span>
+            <span className="theme-settings-label"><CaseText>Font</CaseText></span>
             <div className="theme-font-buttons">
               <button className="btn" onClick={() => setThemeVar('font-family', 'system-ui')}>
-                System
+                <CaseText>System</CaseText>
               </button>
               <button className="btn" onClick={() => setThemeVar('font-family', 'Georgia')}>
-                Serif
+                <CaseText>Serif</CaseText>
               </button>
               <button className="btn" onClick={() => setThemeVar('font-family', 'Courier New')}>
-                Monospace
+                <CaseText>Monospace</CaseText>
               </button>
               <button
                 className="btn"
@@ -143,7 +144,7 @@ export default function ThemeSettings() {
                   )
                 }
               >
-                Lucida Grande
+                <CaseText>Lucida Grande</CaseText>
               </button>
             </div>
           </div>
@@ -163,17 +164,17 @@ export default function ThemeSettings() {
             { key: 'bullet-color', label: 'Bullet color (daily view)' }
           ].map((entry) => (
             <label key={entry.key} className="theme-color-row">
-              <span>{entry.label}</span>
+              <span><CaseText>{entry.label}</CaseText></span>
               <input type="color" value={toHex(theme[entry.key])} onChange={(e) => setThemeVar(entry.key, e.target.value)} />
             </label>
           ))}
 
           {/* Category bubble colors */}
           <div className="theme-category-colors">
-            <strong>Category bubble colors</strong>
+            <strong><CaseText>Category Bubble Colors</CaseText></strong>
             <div className="category-color-grid">
               {cats.length === 0 ? (
-                <div className="no-categories">No categories found yet</div>
+                <div className="no-categories"><CaseText>No categories found yet</CaseText></div>
               ) : (
                 cats.map((c) => (
                   <label key={c} className="category-color-label">

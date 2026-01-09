@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTaskStore } from '../state/taskStore/index.jsx';
+import CaseText from './CaseText.jsx';
 
 export default function CategoriesFilter({ mode = 'select' }) {
   const {
@@ -35,10 +36,10 @@ export default function CategoriesFilter({ mode = 'select' }) {
         style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}
       >
         <button className="btn" onClick={() => toggleAllCategories(true)} aria-label="Select all">
-          Select all
+          <CaseText>Select All</CaseText>
         </button>
         <button className="btn" onClick={() => toggleAllCategories(false)} aria-label="Deselect all">
-          Deselect all
+          <CaseText>Deselect All</CaseText>
         </button>
       </div>
 

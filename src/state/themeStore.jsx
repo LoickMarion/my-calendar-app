@@ -70,6 +70,9 @@ const DEFAULT_THEME = {
   'bullet-svg-spacing': 10,       
   'bullet-svg-size': 24, 
   'bullet-svg': null,
+
+  //title case vs lower case
+  'text-case': 'title',
 };
 
 function applyTheme(theme) {
@@ -84,6 +87,11 @@ function applyTheme(theme) {
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(DEFAULT_THEME);
+
+  function setTextCase(mode) {
+    setTheme((prev) => ({ ...prev, 'text-case': mode }));
+  }
+
 
   // Load saved theme once
   useEffect(() => {
@@ -140,7 +148,7 @@ export function ThemeProvider({ children }) {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, setThemeVar, resetDefaults }}>
+    <ThemeContext.Provider value={{ theme, setThemeVar, resetDefaults, setTextCase }}>
       {children}
     </ThemeContext.Provider>
   );

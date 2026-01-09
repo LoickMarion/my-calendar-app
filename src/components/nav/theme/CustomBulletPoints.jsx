@@ -2,6 +2,8 @@
 import React from 'react';
 import { SVG_BULLETS } from './CustomBulletPointsSVGs';
 
+import CaseText from '../../CaseText.jsx';
+
 // Editable simple shapes
 const SIMPLE_SHAPES = [
   { id: 'circle', label: 'Circle' },
@@ -17,12 +19,12 @@ export default function CustomBulletPoints({ theme, setThemeVar }) {
 
   return (
     <div className="advanced-section">
-      <div className="advanced-section-title">Custom Bullet Points</div>
+      <div className="advanced-section-title"><CaseText>Custom Bullet Points</CaseText></div>
 
       <div className="advanced-subsection">
         {/* ======================= SVG Bullets ======================= */}
         <div className="bullet-section">
-          <div className="bullet-section-title">SVG Icons</div>
+          <div className="bullet-section-title"><CaseText>SVG Icons</CaseText></div>
           <div className="bullet-style-grid">
             {Object.entries(SVG_BULLETS).map(([id, Svg]) => (
               <button
@@ -32,14 +34,14 @@ export default function CustomBulletPoints({ theme, setThemeVar }) {
                 onClick={() => setThemeVar('bullet-svg', id)}
               >
                 
-                <span className="bullet-label">{id}</span>
+                <span className="bullet-label"><CaseText>{id}</CaseText></span>
               </button>
             ))}
           </div>
 
           <div className="bullet-controls">
             <label className="advanced-label slider-label">
-              <span>Size</span>
+              <span><CaseText>Size</CaseText></span>
               <input
                 type="range"
                 min={10}
@@ -50,7 +52,7 @@ export default function CustomBulletPoints({ theme, setThemeVar }) {
             </label>
 
             <label className="advanced-label slider-label">
-              <span>Spacing</span>
+              <span><CaseText>Spacing</CaseText></span>
               <input
                 type="range"
                 min={0}

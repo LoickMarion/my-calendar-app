@@ -20,7 +20,7 @@ import RainbowHexagon from '/src/svgs/2B21-FE0F-200D-1F308.svg?component';
 // Exported lookup object
 export const SVG_BULLETS = {
   brain: Brain,
-  dna: DNA,
+  DNA: DNA,
   hibiscus: Hibiscus,
   sunflower: Sunflower,
   rainbow: Rainbow,
@@ -33,7 +33,7 @@ export const SVG_BULLETS = {
   sun: Sun,
   smile: Smile,
   planet: Planet,
-  rainbowHex: RainbowHexagon,
+  hexagon: RainbowHexagon,
   default: null,
 
 };

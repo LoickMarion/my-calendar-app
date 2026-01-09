@@ -1,4 +1,5 @@
 import React from 'react';
+import CaseText from '../../CaseText.jsx';
 
 const SHAPES = ['hearts', 'circles', 'stars', 'clouds', 'triangles', 'sparkles'];
 
@@ -25,7 +26,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
                 }
               />
               <span className="checkbox-custom" />
-              <span className="checkbox-label-text">{s}</span>
+              <span className="checkbox-label-text"><CaseText>{s}</CaseText></span>
             </label>
 
             {/* Color picker (right-aligned via CSS) */}
@@ -43,7 +44,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
               <div className="shape-sliders-row">
                 {/* Density (quadratic mapping happens elsewhere) */}
                 <label className="advanced-label slider-label">
-                  <span>Density</span>
+                  <span><CaseText>Density</CaseText></span>
                   <input
                     type="range"
                     min={0}
@@ -60,7 +61,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
 
                 {/* Opacity */}
                 <label className="advanced-label slider-label">
-                  <span>Opacity</span>
+                  <span><CaseText>Opacity</CaseText></span>
                   <input
                     type="range"
                     min={0.02}
@@ -78,7 +79,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
 
                 {/* Size */}
                 <label className="advanced-label slider-label">
-                  <span>Size</span>
+                  <span><CaseText>Size</CaseText></span>
                   <input
                     type="range"
                     min={25}
@@ -103,7 +104,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
       {/* Global shape controls */}
       <div className="shape-settings-row controls-row">
         <div className="control-item">
-          <label className="control-label">Render on top of widgets</label>
+          <label className="control-label"><CaseText>Render on top of widgets</CaseText></label>
           <label className="checkbox-wrapper">
             <input
               type="checkbox"
@@ -123,7 +124,7 @@ export default function BackgroundShapesOptions({ theme, setThemeVar }) {
         </div>
 
         <div className="control-item">
-          <label className="control-label">Random seed</label>
+          <label className="control-label"><CaseText>Random Seed</CaseText></label>
           <input
             type="text"
             className="control-input"

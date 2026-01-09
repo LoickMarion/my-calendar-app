@@ -1,5 +1,5 @@
 import React from 'react';
-
+import CaseText from '../CaseText.jsx';
 export default function JumpToToday({ setCurrent, setSelectedDate }) {
   function handleClick() {
     const now = new Date();
@@ -16,7 +16,7 @@ export default function JumpToToday({ setCurrent, setSelectedDate }) {
 
   return (
     <button className="btn" onClick={handleClick}>
-      Today
+      <CaseText>Today</CaseText>
     </button>
   );
 }

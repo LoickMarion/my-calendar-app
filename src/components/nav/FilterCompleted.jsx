@@ -1,6 +1,6 @@
 // components/nav/FilterCompleted.jsx
 import React from 'react';
-
+import CaseText from '../CaseText.jsx';
 import { useTaskStore } from '../../state/taskStore/index.jsx';
 
 export default function FilterCompleted() {
@@ -13,7 +13,7 @@ export default function FilterCompleted() {
     aria-pressed={showIncompleteOnly}
     style={{ width: '130px', textAlign: 'center' }}
     >
-    {showIncompleteOnly ? 'Incomplete Only' : 'All Tasks'}
+    <CaseText>{showIncompleteOnly ? 'Incomplete Only' : 'All Tasks'}</CaseText>
     </button>
   );
 }

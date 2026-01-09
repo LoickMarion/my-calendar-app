@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTaskStore } from '../state/taskStore/index.jsx';
+import CaseText from './CaseText.jsx';
 
 export default function AddTaskPanel({ className = "" }) {
   const {
@@ -141,7 +142,7 @@ export default function AddTaskPanel({ className = "" }) {
       className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
     >
       <h3>
-        {isEditing ? 'Edit Task' : 'Add Task'}
+        <CaseText>{isEditing ? 'Edit Task' : 'Add Task'}</CaseText>
       </h3>
 
       <form
@@ -151,21 +152,20 @@ export default function AddTaskPanel({ className = "" }) {
         {/* Task Title (NEW FIELD) */}
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-            Task Title
+            <CaseText>Task Title</CaseText>
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Optional title"
             className="task-input"
           />
         </div>
 
         {/* Task Text */}
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-            Task Text
+          <label style={{ display: 'block', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+            <CaseText>Task Text</CaseText>
           </label>
           <input
             type="text"
@@ -178,25 +178,25 @@ export default function AddTaskPanel({ className = "" }) {
 
         {/* Category */}
         <div>
-          <label style={{ display: 'block', marginTop: '0.25rem',marginBottom: '0.5rem' }}>
-            Category
+          <label style={{ display: 'block', marginTop: '0.5rem',marginBottom: '0.5rem' }}>
+            <CaseText>Category</CaseText>
           </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="task-input"
           >
-            <option value="">-- Select category --</option>
+            <option value=""> <CaseText>-- Select category --</CaseText></option>
             {categories.map((cat) => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
-            <option value="__new__">➕ Create new category…</option>
+            <option value="__new__"><CaseText>➕ Create new category…</CaseText></option>
           </select>
 
           {isCreatingNewCategory && (
             <input
               type="text"
-              placeholder="New category name"
+              placeholder={<CaseText>New category name</CaseText>}
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
               className="task-input"
@@ -206,9 +206,9 @@ export default function AddTaskPanel({ className = "" }) {
         </div>
 
         {/* Date */}
-        <div style={{ marginTop: '0.25rem', marginBottom: '0.75rem' }}>
+        <div style={{ marginTop: '0.5rem', marginBottom: '0.75rem' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-            Date
+            <CaseText>Date</CaseText>
           </label>
           <input
             type="date"
@@ -224,7 +224,7 @@ export default function AddTaskPanel({ className = "" }) {
           className="btn"
           disabled={!text.trim() || !date}
         >
-          {isEditing ? 'Save Changes' : 'Add Task'}
+          <CaseText>{isEditing ? 'Save Changes' : 'Add Task'}</CaseText>
         </button>
 
         {isEditing && (
@@ -232,9 +232,9 @@ export default function AddTaskPanel({ className = "" }) {
             type="button"
             onClick={cancelEditTask}
             className="btn"
-            style={{ marginTop: '0.25rem' }}
+            style={{ marginTop: '0.5rem' }}
           >
-            Cancel
+            <CaseText>Cancel</CaseText>
           </button>
         )}
       </form>
@@ -245,7 +245,7 @@ export default function AddTaskPanel({ className = "" }) {
         className="btn"
         style={{ marginTop: '0.5rem' }}
       >
-        Download Tasks CSV
+        <CaseText>Download Tasks CSV</CaseText>
       </button>
     </aside>
   );

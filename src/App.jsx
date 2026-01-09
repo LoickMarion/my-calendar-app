@@ -19,6 +19,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import BackgroundShapes from './components/BackgroundShapes';
 import AddTaskPanel from './components/AddTaskPanel';
 import MonthNavigator from './components/MonthNavigator';
+import CaseText from './components/CaseText.jsx';
 
 /* Import the split CSS files */
 import './styles/globals.css';
@@ -112,7 +113,7 @@ function AppContent() {
         <BackgroundShapes />
 
          <header className="app-header">
-            <h1>Pookie Calendar</h1>
+            <h1><CaseText>Pookie Calendar &lt;3</CaseText></h1>
           </header>
 
         <div className="app-content">
