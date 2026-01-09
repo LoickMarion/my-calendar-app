@@ -110,6 +110,10 @@ function AppContent() {
       <div className="app-shell">
         <BackgroundShapes />
 
+         <header className="app-header">
+            <h1>Pookie Calendar</h1>
+          </header>
+
         <div className="app-content">
 
           <NavigationBar

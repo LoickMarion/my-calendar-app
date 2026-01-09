@@ -63,3 +63,18 @@
     width: 100%;
   }
 }
+
+.app-header {
+  width: 100%;
+  background:var(--widget-bg); /* or var(--app-bg) */
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;       /* center title horizontally */
+  top: 0;
+  z-index: 10;
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
