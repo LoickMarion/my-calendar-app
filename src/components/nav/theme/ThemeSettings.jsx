@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useThemeStore } from '../../state/themeStore.jsx';
-import { useTaskStore } from '../../state/taskStore/index.jsx';
+import { useThemeStore } from '../../../state/themeStore.jsx';
+import { useTaskStore } from '../../../state/taskStore/index.jsx';
 import AdvancedOptions from './AdvancedOptions.jsx';
 
 export default function ThemeSettings() {

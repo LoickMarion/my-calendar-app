@@ -1,7 +1,7 @@
 // NavigationBar.jsx
 import React from 'react';
 import ImportControls from './ImportControls';
-import ThemeSettings from './ThemeSettings';
+import ThemeSettings from './theme/ThemeSettings';
 import ModeToggle from './ModeToggle';
 import CaseToggle from './CaseToggle';
 import FilterCompleted from './FilterCompleted';

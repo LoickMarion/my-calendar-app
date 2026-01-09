@@ -30,8 +30,8 @@ import './styles/components/MonthNavigator.css';
 import './styles/components/AddTaskPanel.css';
 import './styles/components/CategoriesFilter.css';
 import './styles/components/DayView.css';
-import './styles/components/ThemeSettings.css';
-import './styles/components/AdvancedOptions.css';
+import './styles/components/themes/ThemeSettings.css';
+import './styles/components/themes/BackgroundShapesOptions.css'
 import './styles/components/ModeToggle.css';
 import './styles/components/TaskItem.css';
 
