@@ -74,25 +74,33 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
           </div>
 
           {/* Other options row */}
-          <div className="shape-settings-row">
-            <label className="advanced-label slider-label">
-              <span>Render on top of widgets</span>
-              <input
-                type="checkbox"
-                checked={theme['shapes-on-top'] === 'true' || theme['shapes-on-top'] === true}
-                onChange={(e) => setThemeVar('shapes-on-top', e.target.checked ? 'true' : 'false')}
-              />
-            </label>
+          <div className="shape-settings-row controls-row">
+            {/* Render on top checkbox */}
+            <div className="control-item">
+              <label className="control-label">Render on top of widgets</label>
+              <label className="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  checked={theme['shapes-on-top'] === 'true' || theme['shapes-on-top'] === true}
+                  onChange={(e) => setThemeVar('shapes-on-top', e.target.checked ? 'true' : 'false')}
+                />
+                <span className="checkbox-custom" />
+              </label>
+            </div>
 
-            <label className="advanced-label slider-label">
-              <span>Random seed</span>
+            {/* Random seed input */}
+            <div className="control-item">
+              <label className="control-label">Random seed</label>
               <input
                 type="text"
                 value={theme['shapes-seed'] || ''}
                 onChange={(e) => setThemeVar('shapes-seed', e.target.value)}
+                className="control-input"
+                placeholder="Optional"
               />
-            </label>
+            </div>
           </div>
+
         </div>
       </div>
 

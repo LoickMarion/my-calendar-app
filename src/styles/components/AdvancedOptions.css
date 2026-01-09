@@ -110,3 +110,32 @@
   width: 90px;          /* narrower slider */
   min-width: 70px;      /* prevent too small on tiny screens */
 }
+
+.shape-settings-row.controls-row {
+  display: flex;
+  gap: 2rem;               /* space between items */
+  align-items: flex-start;  /* align label + control */
+  flex-wrap: wrap;          /* wrap on narrow screens */
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;  /* label on top, control underneath */
+  gap: 0.25rem;
+}
+
+.control-label {
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+/* Text input styling */
+.control-input {
+  width: 100px;            /* adjust to fit nicely */
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+
