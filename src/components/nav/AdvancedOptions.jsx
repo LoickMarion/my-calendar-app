@@ -46,7 +46,7 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
                       <input
                         type="range"
                         min={0}
-                        max={1000}
+                        max={10}
                         value={theme[`shape-${s}-density`] || 18}
                         onChange={(e) => setThemeVar(`shape-${s}-density`, String(e.target.value))}
                       />

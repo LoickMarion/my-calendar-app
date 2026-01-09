@@ -96,7 +96,7 @@ export default function BackgroundShapes() {
   const layout = useMemo(() => {
     const out = {};
     shapes.forEach((s, idx) => {
-      const count = Math.max(0, Math.floor(Number(theme[`shape-${s}-density`]) || 18));
+      const count = Math.max(0, Math.floor(10 * Number(theme[`shape-${s}-density`])** 2 || 18));
       const positions = makePositions(Number(seed) + idx * 1009, count);
       const opacity = Number(theme[`shape-${s}-opacity`] || 0.18);
       const sizeMul = Number(theme[`shape-${s}-size`] || 1.0);

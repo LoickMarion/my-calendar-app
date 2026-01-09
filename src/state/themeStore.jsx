@@ -39,27 +39,27 @@ const DEFAULT_THEME = {
 
 
   /* Per-shape density, opacity, size multiplier */
-  'shape-hearts-density': '18',
+  'shape-hearts-density': '5',
   'shape-hearts-opacity': '0.18',
   'shape-hearts-size': '1.0',
 
-  'shape-circles-density': '18',
+  'shape-circles-density': '5',
   'shape-circles-opacity': '0.18',
   'shape-circles-size': '1.0',
 
-  'shape-stars-density': '18',
+  'shape-stars-density': '5',
   'shape-stars-opacity': '0.18',
   'shape-stars-size': '1.0',
 
-  'shape-clouds-density': '18',
+  'shape-clouds-density': '5',
   'shape-clouds-opacity': '0.18',
   'shape-clouds-size': '1.0',
 
-  'shape-triangles-density': '18',
+  'shape-triangles-density': '5',
   'shape-triangles-opacity': '0.18',
   'shape-triangles-size': '1.0',
 
-  'shape-sparkles-density': '18',
+  'shape-sparkles-density': '5',
   'shape-sparkles-opacity': '0.18',
   'shape-sparkles-size': '1.0',
 
