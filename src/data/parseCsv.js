@@ -2,7 +2,7 @@
 // Minimal CSV parser and helpers to convert CSV text into task objects.
 // Supports:
 // 1) Wide format: date + category columns
-// 2) Long format: date, category, text/description
+// 2) Long format: date, category, text/description, title, completed
 // 3) Legacy row-per-task format
 
 // ------------------------------------------------------------
@@ -85,6 +85,18 @@ export function csvToObjects(text) {
       const key = headers[j] || `col${j}`;
       obj[key] = row[j] === undefined ? '' : row[j];
     }
+
+    // Ensure completed is boolean
+    if (obj.completed !== undefined) {
+      const val = obj.completed.toString().toLowerCase();
+      obj.completed = val === 'true' || val === '1';
+    } else {
+      obj.completed = false;
+    }
+
+    // Ensure title exists
+    obj.title = obj.title || obj.description || '';
+
     out.push(obj);
   }
 
@@ -111,11 +123,10 @@ export function csvToTasks(text) {
   // ------------------------------------------------------------
   const isLongFormat =
     headersLower.includes('category') &&
-    (headersLower.includes('text') ||
-      headersLower.includes('description'))
-    && headersLower.length == 3;
+    (headersLower.includes('text') || headersLower.includes('description')) &&
+    headersLower.length >= 3;
 
-    if (isLongFormat) {
+  if (isLongFormat) {
     const objs = csvToObjects(text);
 
     objs.forEach((r) => {
@@ -130,16 +141,19 @@ export function csvToTasks(text) {
       if (!dateKey) return;
 
       const category = r.category?.toString().trim();
-      const textVal =
-        r.text?.toString().trim() ||
-        r.description?.toString().trim();
+      const description =
+        r.text?.toString().trim() || r.description?.toString().trim();
+      const title = r.title || description || '';
+      const completed = r.completed || false;
 
-      if (!category || !textVal) return;
+      if (!category || !description) return;
 
       if (!tasksByDate[dateKey]) tasksByDate[dateKey] = [];
       tasksByDate[dateKey].push({
         category,
-        description: textVal
+        description,
+        title,
+        completed,
       });
     });
 
@@ -157,6 +171,7 @@ export function csvToTasks(text) {
     !headersLower.includes('category') &&
     !headersLower.includes('text') &&
     !headersLower.includes('description');
+
   if (isWideFormat) {
     for (let i = 1; i < rawRows.length; i++) {
       const row = rawRows[i];
@@ -185,7 +200,9 @@ export function csvToTasks(text) {
           if (!tasksByDate[dateKey]) tasksByDate[dateKey] = [];
           tasksByDate[dateKey].push({
             category,
-            description: part
+            description: part,
+            title: part,
+            completed: false,
           });
         });
       }
@@ -210,18 +227,21 @@ export function csvToTasks(text) {
       dateKey = dateVal.slice(0, 10);
     if (!dateKey) return;
 
-    const category =
-      r.category?.toString().trim() || 'Imported';
+    const category = r.category?.toString().trim() || 'Imported';
     const description =
       r.description?.toString().trim() ||
       r.text?.toString().trim() ||
       r.task?.toString().trim() ||
       '';
+    const title = r.title || description;
+    const completed = r.completed || false;
 
     if (!tasksByDate[dateKey]) tasksByDate[dateKey] = [];
     tasksByDate[dateKey].push({
       category,
-      description
+      description,
+      title,
+      completed,
     });
   });
 

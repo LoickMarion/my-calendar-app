@@ -8,27 +8,41 @@ export function normalizeTaskId(taskId) {
   return taskId.startsWith('task__') ? taskId.slice(6) : taskId;
 }
 
-/** Toggle completion of a task */
-export function toggleTaskComplete(completedTasks, setCompletedTasks, dateKey, taskId) {
-  const cleanId = normalizeTaskId(taskId);
+/** Toggle completion of a task by updating its `completed` field */
+//make a new task so there is a new reference to trigger a react update
 
-  setCompletedTasks(prev => {
-    const day = prev[dateKey] || {};
-    return {
-      ...prev,
-      [dateKey]: {
-        ...day,
-        [cleanId]: !day[cleanId],
-      },
+function findIndexWithinGroup(arr, category, groupIndex) {
+  let count = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].category === category) {
+      if (count === groupIndex) return i;
+      count++;
+    }
+
+  }
+
+  return -1;
+}
+
+export function toggleTaskComplete( setTasks, dateKey, taskId) {
+  setTasks(prev => {
+    const arr = prev[dateKey] || [];
+    const groupIndex = Number(taskId.split('__')[3]); // get index from id
+    const index = findIndexWithinGroup(arr, taskId.split('__')[2], groupIndex);
+    if (index === -1) return prev; // task not found
+
+    const updatedTask = {
+      ...arr[index],
+      completed: !arr[index].completed
     };
+    const newArr = [...arr];
+    newArr[index] = updatedTask;
+
+    return { ...prev, [dateKey]: newArr };
   });
 }
 
-/** Check if a task is complete */
-export function isTaskComplete(completedTasks, dateKey, taskId) {
-  const cleanId = normalizeTaskId(taskId);
-  return Boolean(completedTasks[dateKey]?.[cleanId]);
-}
 
 /** Add deterministic IDs to tasks for consistency */
 export function addDeterministicIds(tasksObj) {

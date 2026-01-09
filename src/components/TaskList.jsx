@@ -8,7 +8,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import SortableTaskItem from './SortableTaskItem.jsx';
 
 export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
-  const { getCategoryColor, isTaskComplete, showIncompleteOnly } = useTaskStore();
+  const { getCategoryColor, showIncompleteOnly } = useTaskStore();
 
   // Group tasks by category
   const groups = tasks.reduce((acc, t) => {
@@ -28,10 +28,7 @@ export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
 
           // Filter visible tasks for this group
           const visibleTasks = showIncompleteOnly
-            ? groupTasks.filter((t, i) => {
-                const id = `task__${dateKey}__${gk}__${i}`;
-                return !isTaskComplete(dateKey, id);
-              })
+            ? groupTasks.filter(t => !t.completed)
             : groupTasks;
 
           // Skip category if no visible tasks
@@ -60,9 +57,8 @@ export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
                     return (
                       <SortableTaskItem
                         key={id}
+                        task={t}
                         id={id}
-                        text={t.description || '(no text)'}
-                        dateKey={dateKey}
                         mode={mode}
                       />
                     );

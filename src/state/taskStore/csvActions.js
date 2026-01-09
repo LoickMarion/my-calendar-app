@@ -12,7 +12,7 @@ export function escapeCSV(value) {
 
 /**Convert tasks object to CSV string */
 export function tasksToCSV(tasks) {
-  const rows = [["date", "category", "text"]];
+  const rows = [["date", "category", "title", "description", "completed"]];
 
   for (const dateKey of Object.keys(tasks)) {
     const arr = tasks[dateKey] || [];
@@ -20,7 +20,9 @@ export function tasksToCSV(tasks) {
       rows.push([
         dateKey,
         t.category || "",
-        t.description || ""
+        t.title || "",
+        t.description || "",
+        t.completed ? "true" : "false"
       ]);
     });
   }

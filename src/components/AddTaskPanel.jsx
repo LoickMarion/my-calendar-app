@@ -19,6 +19,7 @@ export default function AddTaskPanel({ className = "" }) {
   const categories = getCategories();
 
   const [text, setText] = useState('');
+  const [title, setTitle] = useState(''); // NEW FIELD
   const [category, setCategory] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [date, setDate] = useState('');
@@ -32,11 +33,13 @@ export default function AddTaskPanel({ className = "" }) {
   useEffect(() => {
     if (editingTask) {
       setText(editingTask.task.description || '');
+      setTitle(editingTask.task.title || editingTask.task.description || ''); // NEW FIELD
       setCategory(editingTask.task.category || '');
       setNewCategory('');
       setDate(editingTask.dateKey);
     } else {
       setText('');
+      setTitle(''); // NEW FIELD
       setCategory('');
       setNewCategory('');
       setDate('');
@@ -56,7 +59,7 @@ export default function AddTaskPanel({ className = "" }) {
   }
 
   function tasksToCSV(tasksObj) {
-    const rows = [["date", "category", "text"]];
+    const rows = [["date", "category", "title", "text", "completed"]]; // UPDATED HEADER
 
     for (const dateKey of Object.keys(tasksObj)) {
       const arr = tasksObj[dateKey] || [];
@@ -64,7 +67,9 @@ export default function AddTaskPanel({ className = "" }) {
         rows.push([
           dateKey,
           escapeCSV(t.category || ""),
-          escapeCSV(t.description || "")
+          escapeCSV(t.title || ""),
+          escapeCSV(t.description || ""),
+          t.completed ? "true" : "false",
         ]);
       });
     }
@@ -103,6 +108,13 @@ export default function AddTaskPanel({ className = "" }) {
       addCategory(finalCategory);
     }
 
+    const taskData = {
+      description: text.trim(),
+      title: title.trim() || text.trim(), // NEW FIELD
+      category: finalCategory || 'Uncategorized',
+      completed: editingTask?.task.completed || false, // preserve completed status
+    };
+
     if (isEditing) {
       const fromDateKey = editingTask.dateKey;
       const toDateKey = date;
@@ -113,131 +125,128 @@ export default function AddTaskPanel({ className = "" }) {
         moveTaskToDate(fromDateKey, toDateKey, taskId);
 
         // Then edit the task on the NEW date
-        saveTaskEdits(
-          toDateKey,
-          taskId,
-          {
-            description: text.trim(),
-            category: finalCategory || 'Uncategorized'
-          }
-        );
+        saveTaskEdits(toDateKey, taskId, taskData);
       } else {
         // Same date → simple edit
-        saveTaskEdits(
-          fromDateKey,
-          taskId,
-          {
-            description: text.trim(),
-            category: finalCategory || 'Uncategorized'
-          }
-        );
+        saveTaskEdits(fromDateKey, taskId, taskData);
       }
     } else {
       // Create new task
-      addTask(date, {
-        text: text.trim(),
-        category: finalCategory || 'Uncategorized'
-      });
+      addTask(date, taskData);
     }
   }
 
-return (
-  <aside
-    className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
-  >
-    <h3>
-      {isEditing ? 'Edit Task' : 'Add Task'}
-    </h3>
-
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: 'flex', flexDirection: 'column'}}
+  return (
+    <aside
+      className={`add-task-panel-root ${className} ${isEditing ? 'edit-mode' : 'add-mode'}`}
     >
-      {/* Task Text */}
-      <div>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-          Task Text
-        </label>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          required
-          className="task-input"
-        />
-      </div>
+      <h3>
+        {isEditing ? 'Edit Task' : 'Add Task'}
+      </h3>
 
-      {/* Category */}
-      <div>
-        <label style={{ display: 'block', marginTop: '0.25rem',marginBottom: '0.5rem' }}>
-          Category
-        </label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="task-input"
-        >
-          <option value="">-- Select category --</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-          <option value="__new__">➕ Create new category…</option>
-        </select>
-
-        {isCreatingNewCategory && (
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: 'flex', flexDirection: 'column'}}
+      >
+        {/* Task Title (NEW FIELD) */}
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Task Title
+          </label>
           <input
             type="text"
-            placeholder="New category name"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Optional title"
             className="task-input"
-            style={{ marginTop: '0.25rem' }}
           />
-        )}
-      </div>
+        </div>
 
-      {/* Date */}
-      <div style={{ marginTop: '0.25rem', marginBottom: '0.75rem' }}> {/* Add space before button */}
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>
-          Date
-        </label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-          className="task-input"
-        />
-      </div>
+        {/* Task Text */}
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Task Text
+          </label>
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            required
+            className="task-input"
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label style={{ display: 'block', marginTop: '0.25rem',marginBottom: '0.5rem' }}>
+            Category
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="task-input"
+          >
+            <option value="">-- Select category --</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+            <option value="__new__">➕ Create new category…</option>
+          </select>
+
+          {isCreatingNewCategory && (
+            <input
+              type="text"
+              placeholder="New category name"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              className="task-input"
+              style={{ marginTop: '0.25rem' }}
+            />
+          )}
+        </div>
+
+        {/* Date */}
+        <div style={{ marginTop: '0.25rem', marginBottom: '0.75rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>
+            Date
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+            className="task-input"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="btn"
+          disabled={!text.trim() || !date}
+        >
+          {isEditing ? 'Save Changes' : 'Add Task'}
+        </button>
+
+        {isEditing && (
+          <button
+            type="button"
+            onClick={cancelEditTask}
+            className="btn"
+            style={{ marginTop: '0.25rem' }}
+          >
+            Cancel
+          </button>
+        )}
+      </form>
 
       <button
-        type="submit"
+        type="button"
+        onClick={handleDownloadCSV}
         className="btn"
-        disabled={!text.trim() || !date}
+        style={{ marginTop: '0.5rem' }}
       >
-        {isEditing ? 'Save Changes' : 'Add Task'}
+        Download Tasks CSV
       </button>
-
-      {isEditing && (
-        <button
-          type="button"
-          onClick={cancelEditTask}
-          className="btn"
-          style={{ marginTop: '0.25rem' }}
-        >
-          Cancel
-        </button>
-      )}
-    </form>
-
-    <button
-      type="button"
-      onClick={handleDownloadCSV}
-      className="btn"
-      style={{ marginTop: '0.5rem' }}
-    >
-      Download Tasks CSV
-    </button>
-  </aside>
+    </aside>
   );
 }

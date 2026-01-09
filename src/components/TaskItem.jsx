@@ -5,22 +5,24 @@ import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { useTaskStore } from '../state/taskStore/index.jsx';
 
-export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
+export default function TaskItem({ task, id, mode = 'select' }) {
   const {
     toggleTaskComplete,
-    isTaskComplete,
     deleteTask,
     startEditTask
   } = useTaskStore();
 
-//   console.log('DateKey:', dateKey, 'Task ID:', id);
   const draggableId = `${id}`;
+  const dateKey = id.split('__')[1];
 
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: draggableId
+const { attributes, listeners, setNodeRef, transform, isDragging } =
+  useDraggable({
+    id: draggableId,
+    disabled: false,
+    data: { noDrag: true }
   });
 
-  const checked = isTaskComplete(dateKey, id);
+  const checked = task.completed;
 
   const style = transform
     ? {
@@ -32,28 +34,33 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
   let actionBox = null;
   if (mode === 'select') {
     actionBox = (
-      <input
+        <input
         type="checkbox"
         className="task-check"
         checked={checked}
-        onChange={() => toggleTaskComplete(dateKey, id)}
-      />
+        data-no-drag
+        onChange={() =>  {
+            console.log('Checkbox clicked for task:', id);
+            toggleTaskComplete(dateKey, id);}}
+        />
     );
   } else if (mode === 'delete') {
     actionBox = (
-      <button
+        <button
         type="button"
         className="task-action-delete"
+        data-no-drag
         onClick={() => deleteTask(dateKey, id)}
-      >
+        >
         ✕
-      </button>
+        </button>
     );
   } else if (mode === 'edit') {
     actionBox = (
       <button
         type="button"
         className="task-action-edit"
+        data-no-drag
         onClick={() => startEditTask(dateKey, id)}
       >
         ✎
@@ -61,19 +68,32 @@ export default function TaskItem({ id, text, dateKey, mode = 'select' }) {
     );
   }
 
-  return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className={`task-list-item ${checked ? 'completed' : ''} ${isDragging ? 'dragging' : ''}`}
-    >
-      <div className="task-left">
-        <span className="bullet">•</span>
-        <span className="task-title">{text}</span>
-      </div>
-      <div className="task-right">{actionBox}</div>
-    </li>
-  );
+    return (
+        <li
+        ref={setNodeRef}
+        style={style}
+        className={`task-list-item ${checked ? 'completed' : ''} ${isDragging ? 'dragging' : ''}`}
+        >
+        {/* ROW 1 */}
+        <div className="task-row-top">
+            <div className="task-title">
+            {task.title}
+            </div>
+
+            <div className="task-right">
+            {actionBox}
+            </div>
+        </div>
+
+        {/* ROW 2 */}
+        {task.description && (
+            <div className="task-description">
+            {task.description}
+            </div>
+        )}
+        </li>
+
+
+    );
+
 }

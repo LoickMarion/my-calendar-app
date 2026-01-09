@@ -12,9 +12,7 @@ export function addCategory(setEnabledCategories, setCategoryColors, cat) {
 }
 
 /** Delete a category and remove its tasks + completion states */
-export function deleteCategory(tasks, setTasks, completedTasks, setCompletedTasks,
-                               enabledCategories, setEnabledCategories,
-                               categoryColors, setCategoryColors, cat) {
+export function deleteCategory(setTasks,  setEnabledCategories, setCategoryColors, cat) {
   // Remove tasks in this category
   setTasks(prev => {
     const newTasks = {};
@@ -24,21 +22,6 @@ export function deleteCategory(tasks, setTasks, completedTasks, setCompletedTask
       if (filtered.length > 0) newTasks[dateKey] = filtered;
     }
     return newTasks;
-  });
-
-  // Remove completed tasks in this category
-  setCompletedTasks(prev => {
-    const newCompleted = {};
-    for (const dateKey of Object.keys(prev)) {
-      const day = prev[dateKey];
-      if (!day) continue;
-      const updatedDay = {};
-      for (const taskId of Object.keys(day)) {
-        if (!taskId.includes(`__${cat}__`)) updatedDay[taskId] = day[taskId];
-      }
-      if (Object.keys(updatedDay).length > 0) newCompleted[dateKey] = updatedDay;
-    }
-    return newCompleted;
   });
 
   // Remove from enabledCategories

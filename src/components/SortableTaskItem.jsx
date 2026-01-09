@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import TaskItem from './TaskItem.jsx';
 
-export default function SortableTaskItem({ id, text, dateKey, mode }) {
+export default function SortableTaskItem({ task, id, mode }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   const style = {
@@ -17,7 +17,7 @@ export default function SortableTaskItem({ id, text, dateKey, mode }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <TaskItem id={id} text={text} dateKey={dateKey} mode={mode} />
+      <TaskItem task={task} id={id} mode={mode} />
     </div>
   );
 }

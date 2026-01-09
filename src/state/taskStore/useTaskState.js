@@ -19,7 +19,6 @@ export function useTaskState() {
   const [categoryColors, setCategoryColors] = useState({});
 
   // --- Completion + UI state ---
-  const [completedTasks, setCompletedTasks] = useState({});
   const [showIncompleteOnly, setShowIncompleteOnly] = useState(false);
 
   // --- UI toggles ---
@@ -50,29 +49,7 @@ export function useTaskState() {
     }
   }, [categoryColors]);
 
-  // -------------------------------
-  // Load persisted completed tasks
-  // -------------------------------
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('calendar_completed_tasks');
-      if (saved) setCompletedTasks(JSON.parse(saved));
-    } catch (err) {
-      console.warn('Failed to load completed tasks', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        'calendar_completed_tasks',
-        JSON.stringify(completedTasks)
-      );
-    } catch (err) {
-      console.warn('Failed to save completed tasks', err);
-    }
-  }, [completedTasks]);
-
+ 
   // -------------------------------
   // Load tasks ONCE
   // -------------------------------
@@ -158,10 +135,6 @@ export function useTaskState() {
     setEnabledCategories,
     categoryColors,
     setCategoryColors,
-
-    // Completion
-    completedTasks,
-    setCompletedTasks,
 
     // UI flags
     showIncompleteOnly,

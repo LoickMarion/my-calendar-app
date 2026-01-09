@@ -5,7 +5,6 @@ import { normalizeTaskId } from './taskUtils';
 export function addTask(
   tasks,
   setTasks,
-  setCompletedTasks,
   initializeCategories,
   dateKey,
   task
@@ -16,26 +15,25 @@ export function addTask(
   const category = (task.category && task.category.toString().trim()) || 'Uncategorized';
   const id = `task__${dateKey}__${category}__${index}`;
 
-  const newTask = { id, category, description: task.text };
+    const newTask = {
+        category: task.category || 'Uncategorized',
+        description: task.description || task.text || '',
+        title: task.title || '',
+        completed: false
+    };
+
 
   // Update tasks
   const updatedTasks = { ...tasks, [dateKey]: [...arr, newTask] };
   setTasks(updatedTasks);
 
-  // Mark new task as incomplete
-  if (setCompletedTasks) {
-    setCompletedTasks(prev => ({
-      ...prev,
-      [dateKey]: { ...(prev[dateKey] || {}), [id]: false }
-    }));
-  }
-
   // Update categories
   if (initializeCategories) initializeCategories(updatedTasks);
+
 }
 
 /** Delete a task */
-export function deleteTask(tasks, setTasks, completedTasks, setCompletedTasks, dateKey, taskId) {
+export function deleteTask(tasks, setTasks, dateKey, taskId) {
   const [__, idDate, category, indexStr] = taskId.split('__');
   const index = parseInt(indexStr, 10);
 
@@ -45,16 +43,10 @@ export function deleteTask(tasks, setTasks, completedTasks, setCompletedTasks, d
   if (!taskToDelete) return;
 
   setTasks({ ...tasks, [dateKey]: arr.filter(t => t !== taskToDelete) });
-
-  if (!completedTasks[dateKey]) return;
-  const updatedDay = { ...completedTasks[dateKey] };
-  delete updatedDay[taskId];
-  setCompletedTasks({ ...completedTasks, [dateKey]: updatedDay });
 }
 
 /** Start editing a task */
 export function startEditTask(tasks, setEditingTask, dateKey, taskId) {
-    console.log('startEditTask called with:', dateKey, taskId);
   const [__, idDate, category, indexStr] = taskId.split('__');
   const index = parseInt(indexStr, 10);
 
@@ -159,7 +151,7 @@ export function moveTask(tasks, setTasks, dateKey, activeId, overId) {
 }
 
 /** Move a task to a different date */
-export function moveTaskToDate(tasks, setTasks, completedTasks, setCompletedTasks, sourceDateKey, targetDateKey, taskId) {
+export function moveTaskToDate(tasks, setTasks, sourceDateKey, targetDateKey, taskId) {
   const [, category, indexStr] = taskId.split('__');
   const index = parseInt(indexStr, 10);
 
@@ -177,19 +169,5 @@ export function moveTaskToDate(tasks, setTasks, completedTasks, setCompletedTask
     ...tasks,
     [sourceDateKey]: newSourceArr,
     [targetDateKey]: newTargetArr,
-  });
-
-  // Move completion state
-  const sourceCompleted = completedTasks[sourceDateKey] || {};
-  const targetCompleted = completedTasks[targetDateKey] || {};
-  if (!sourceCompleted[taskId]) return;
-
-  const updatedSource = { ...sourceCompleted };
-  delete updatedSource[taskId];
-
-  setCompletedTasks({
-    ...completedTasks,
-    [sourceDateKey]: updatedSource,
-    [targetDateKey]: { ...targetCompleted, [taskId.replace(sourceDateKey, targetDateKey)]: true },
   });
 }

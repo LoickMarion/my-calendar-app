@@ -9,7 +9,6 @@ import { DndContext } from '@dnd-kit/core';
 export default function CalendarGrid({ year, month, onSelectDate, selectedDate }) {
   const {
     tasks,
-    isTaskComplete,
     isCategoryEnabled,
     moveTaskToDay
   } = useTaskStore();
@@ -70,13 +69,13 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
               (t.category && t.category.toString().trim()) || gk
             )
           ) {
-            visibleTasks.push({ id });
+            visibleTasks.push(t);
           }
         });
       });
 
       const incompleteTasks = visibleTasks.filter(
-        ({ id }) => !isTaskComplete(dateKey, id)
+        (t) => !t.completed
       );
 
       const taskCount = incompleteTasks.length;

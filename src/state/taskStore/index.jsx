@@ -19,7 +19,6 @@ export function TaskProvider({ children }) {
     taskActions.addTask(
         state.tasks,
         state.setTasks,
-        state.setCompletedTasks,  
         state.initializeCategories, 
         dateKey,
         task
@@ -30,8 +29,6 @@ export function TaskProvider({ children }) {
       taskActions.deleteTask(
         state.tasks,
         state.setTasks,
-        state.completedTasks,
-        state.setCompletedTasks,
         dateKey,
         taskId
       ),
@@ -62,8 +59,6 @@ export function TaskProvider({ children }) {
       taskActions.moveTaskToDate(
         state.tasks,
         state.setTasks,
-        state.completedTasks,
-        state.setCompletedTasks,
         sourceDateKey,
         targetDateKey,
         taskId
@@ -77,13 +72,8 @@ export function TaskProvider({ children }) {
 
     deleteCategory: cat =>
       categoryActions.deleteCategory(
-        state.tasks,
         state.setTasks,
-        state.completedTasks,
-        state.setCompletedTasks,
-        state.enabledCategories,
         state.setEnabledCategories,
-        state.categoryColors,
         state.setCategoryColors,
         cat
       ),
@@ -124,14 +114,12 @@ export function TaskProvider({ children }) {
     // --- Task utils ---
     toggleTaskComplete: (dateKey, taskId) =>
       taskUtils.toggleTaskComplete(
-        state.completedTasks,
-        state.setCompletedTasks,
+        state.setTasks,
         dateKey,
         taskId
       ),
 
-    isTaskComplete: (dateKey, taskId) =>
-      taskUtils.isTaskComplete(state.completedTasks, dateKey, taskId),
+
 
     getTasksForDate: date =>
       taskUtils.getTasksForDate(state.tasks, state.enabledCategories, date),
