@@ -43,7 +43,6 @@ export default function TaskList({ tasks = [], dateKey, mode = 'select' }) {
                 >
                   {gk}
                 </h3>
-                <span className="task-group-count">{visibleTasks.length}</span>
               </div>
 
               <SortableContext
