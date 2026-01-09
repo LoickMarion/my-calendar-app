@@ -1,9 +1,7 @@
 // parseCsv.js
 // Minimal CSV parser and helpers to convert CSV text into task objects.
-// Supports:
-// 1) Wide format: date + category columns
-// 2) Long format: date, category, text/description, title, completed
-// 3) Legacy row-per-task format
+
+import { toLocalDateKey, parseLocalDateKey } from '../state/date.js';
 
 // ------------------------------------------------------------
 // BASIC CSV PARSER (unchanged)
@@ -119,7 +117,26 @@ export function csvToTasks(text) {
   const tasksByDate = {};
 
   // ------------------------------------------------------------
-  // 1) LONG FORMAT DETECTION
+  // Helper: convert any CSV date → local-safe dateKey
+  // ------------------------------------------------------------
+  function safeDateKey(dateVal) {
+    if (!dateVal) return '';
+
+    // If it's already a YYYY-MM-DD string
+    if (typeof dateVal === 'string' && dateVal.length >= 10) {
+      const parsed = parseLocalDateKey(dateVal.slice(0, 10));
+      if (!isNaN(parsed)) return toLocalDateKey(parsed);
+    }
+
+    // If it's a Date or serial number
+    const d = new Date(dateVal);
+    if (!isNaN(d)) return toLocalDateKey(d);
+
+    return '';
+  }
+
+  // ------------------------------------------------------------
+  // 1) LONG FORMAT
   // ------------------------------------------------------------
   const isLongFormat =
     headersLower.includes('category') &&
@@ -130,14 +147,7 @@ export function csvToTasks(text) {
     const objs = csvToObjects(text);
 
     objs.forEach((r) => {
-      const dateVal = r.date;
-      if (!dateVal) return;
-
-      let dateKey = '';
-      const d = new Date(dateVal);
-      if (!isNaN(d)) dateKey = d.toISOString().slice(0, 10);
-      else if (typeof dateVal === 'string' && dateVal.length >= 10)
-        dateKey = dateVal.slice(0, 10);
+      const dateKey = safeDateKey(r.date);
       if (!dateKey) return;
 
       const category = r.category?.toString().trim();
@@ -161,7 +171,7 @@ export function csvToTasks(text) {
   }
 
   // ------------------------------------------------------------
-  // 2) WIDE FORMAT DETECTION
+  // 2) WIDE FORMAT
   // ------------------------------------------------------------
   const isWideFormat =
     headersLower[0] === 'date' &&
@@ -175,14 +185,7 @@ export function csvToTasks(text) {
   if (isWideFormat) {
     for (let i = 1; i < rawRows.length; i++) {
       const row = rawRows[i];
-      const dateVal = (row[0] || '').toString().trim();
-      if (!dateVal) continue;
-
-      let dateKey = '';
-      const d = new Date(dateVal);
-      if (!isNaN(d)) dateKey = d.toISOString().slice(0, 10);
-      else if (typeof dateVal === 'string' && dateVal.length >= 10)
-        dateKey = dateVal.slice(0, 10);
+      const dateKey = safeDateKey(row[0]);
       if (!dateKey) continue;
 
       for (let j = 1; j < headersRaw.length; j++) {
@@ -217,14 +220,7 @@ export function csvToTasks(text) {
   const objs = csvToObjects(text);
 
   objs.forEach((r) => {
-    const dateVal = r.date;
-    if (!dateVal) return;
-
-    let dateKey = '';
-    const d = new Date(dateVal);
-    if (!isNaN(d)) dateKey = d.toISOString().slice(0, 10);
-    else if (typeof dateVal === 'string' && dateVal.length >= 10)
-      dateKey = dateVal.slice(0, 10);
+    const dateKey = safeDateKey(r.date);
     if (!dateKey) return;
 
     const category = r.category?.toString().trim() || 'Imported';

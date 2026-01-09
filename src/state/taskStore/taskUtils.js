@@ -3,6 +3,8 @@
  * Utility functions for managing tasks in the task store.
  */
 
+import { toLocalDateKey } from '../date.js';
+
 /** Normalize task ID by removing leading 'task__' if present */
 export function normalizeTaskId(taskId) {
   return taskId.startsWith('task__') ? taskId.slice(6) : taskId;
@@ -110,16 +112,32 @@ export function initializeCategories(tasksObj, previousEnabledCategories = {}, p
  * OLD SIGNATURE RESTORED
  * This now behaves exactly like before.
  */
-export function getTasksForDate(tasks, enabledCategories, date) {
-  if (!date || !(date instanceof Date)) return [];
+export function getTasksForDate(tasks, enabledCategories, date) { 
+    if (!date) return []; 
 
-  const key = date.toISOString().slice(0, 10); // YYYY-MM-DD
-  const arr = tasks[key] || [];
+    let key = ''; 
+    // Accept Date objects 
+    if (date instanceof Date) { 
+        key = toLocalDateKey(date); 
+    } 
 
-  return arr.filter(t => {
-    const cat = getCategoryKeyForTask(t);
-    return enabledCategories[cat] !== false;
-  });
+    else if (typeof date === 'string') { 
+        // Accept 'YYYY-MM-DD' or similar 
+        const parsed = parseLocalDateKey(date.slice(0, 10)); 
+        if (!isNaN(parsed)) { key = toLocalDateKey(parsed); } 
+    } 
+    else {
+         // Unknown type → bail out
+          return []; 
+        } 
+
+    if (!key) return [];
+
+    const arr = tasks[key] || [];
+    return arr.filter((t) => { 
+        const cat = getCategoryKeyForTask(t); 
+        return enabledCategories[cat] !== false; 
+    }); 
 }
 
 /** Get all tasks filtered by enabled categories */

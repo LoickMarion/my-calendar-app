@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useThemeStore } from '../../../state/themeStore.jsx';
 import { useTaskStore } from '../../../state/taskStore/index.jsx';
 import AdvancedOptions from './AdvancedOptions.jsx';
+import { toLocalDateKey } from '../../../state/date.js';
+
 
 export default function ThemeSettings() {
   const { theme, setThemeVar, resetDefaults } = useThemeStore();
@@ -34,7 +36,7 @@ export default function ThemeSettings() {
         .map((r) => (Array.isArray(r) ? `${csvEscape(r[0])},${csvEscape(r[1])}` : r))
         .join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const filename = `calendar-theme-${new Date().toISOString().slice(0, 10)}.csv`;
+      const filename = `calendar-theme-${toLocalDateKey(new Date())}.csv`;
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

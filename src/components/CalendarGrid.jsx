@@ -6,6 +6,8 @@ import CalendarTile from './CalendarTile';
 import { useTaskStore } from '../state/taskStore/index.jsx';
 import { DndContext } from '@dnd-kit/core';
 
+import { toLocalDateKey } from '../state/date.js';
+
 export default function CalendarGrid({ year, month, onSelectDate, selectedDate }) {
   const {
     tasks,
@@ -25,14 +27,13 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
   let dayCounter = 1 - startWeekday;
 
   const selectedKey = selectedDate
-    ? selectedDate.toISOString().slice(0, 10)
+    ? toLocalDateKey(selectedDate)
     : null;
 
   function handleDragEnd(event) {
     const { active, over } = event;
     if (!over) return;
 
-    // Dropped on a calendar day
     if (over.id.startsWith('day__')) {
       const targetDateKey = over.id.replace('day__', '');
       const [sourceDateKey] = active.id.split('__');
@@ -48,7 +49,9 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
 
     for (let col = 0; col < 7; col++) {
       const d = new Date(year, month, dayCounter);
-      const dateKey = d.toISOString().slice(0, 10);
+
+      const dateKey = toLocalDateKey(d);
+
       const isCurrentMonth = d.getMonth() === month;
 
       const allTasksForDate = tasks[dateKey] || [];
@@ -74,13 +77,12 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
         });
       });
 
-      const incompleteTasks = visibleTasks.filter(
-        (t) => !t.completed
-      );
+      const incompleteTasks = visibleTasks.filter((t) => !t.completed);
 
       const taskCount = incompleteTasks.length;
       const hasTasks = visibleTasks.length > 0;
       const allComplete = hasTasks && taskCount === 0;
+
       const isSelected = selectedKey === dateKey;
 
       week.push(
@@ -117,5 +119,4 @@ export default function CalendarGrid({ year, month, onSelectDate, selectedDate }
       {tiles}
     </section>
   );
-
 }
