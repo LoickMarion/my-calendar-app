@@ -75,7 +75,7 @@ const DEFAULT_THEME = {
   'text-case': 'title',
 
   //animation
-  'completion-animation': 'none',
+  'completion-animation': 'party',
   'last-celebrated-date': "",
 
 };
