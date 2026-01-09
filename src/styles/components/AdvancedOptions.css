@@ -85,6 +85,28 @@
 }
 
 .slider-label span {
-  min-width: 140px;
+  min-width: 70px;
   display: inline-block;
+}
+
+
+.shape-settings-row {
+  display: flex;
+  gap: 1.5rem;          /* slightly tighter spacing */
+  align-items: center;
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;       /* allow wrapping on very narrow screens */
+}
+
+.advanced-label.slider-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.advanced-label.slider-label input[type="range"] {
+  margin-top: 0.25rem;
+  width: 90px;          /* narrower slider */
+  min-width: 70px;      /* prevent too small on tiny screens */
 }

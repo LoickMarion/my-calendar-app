@@ -33,20 +33,21 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
             </label>
           ))}
 
-          {/* Density slider */}
-          <label className="advanced-label slider-label">
-            <span>Density</span>
-            <input
-              type="range"
-              min={0}
-              max={1000}
-              value={theme['shapes-density'] || 18}
-              onChange={(e) => setThemeVar('shapes-density', String(e.target.value))}
-            />
-          </label>
+          {/* Sliders row: Density / Opacity / Size */}
+          <div className="shape-settings-row">
+            {/* Density */}
+            <label className="advanced-label slider-label">
+              <span>Density</span>
+              <input
+                type="range"
+                min={4}
+                max={200}  // increased max
+                value={theme['shapes-density'] || 18}
+                onChange={(e) => setThemeVar('shapes-density', String(e.target.value))}
+              />
+            </label>
 
-          {/* Opacity / size / other sliders */}
-          <div className="advanced-slider-group">
+            {/* Opacity */}
             <label className="advanced-label slider-label">
               <span>Opacity</span>
               <input
@@ -59,8 +60,9 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
               />
             </label>
 
+            {/* Size multiplier */}
             <label className="advanced-label slider-label">
-              <span>Size multiplier</span>
+              <span>Size</span>
               <input
                 type="range"
                 min={25}
@@ -69,7 +71,10 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
                 onChange={(e) => setThemeVar('shapes-size', String(Number(e.target.value) / 100))}
               />
             </label>
+          </div>
 
+          {/* Other options row */}
+          <div className="shape-settings-row">
             <label className="advanced-label slider-label">
               <span>Render on top of widgets</span>
               <input
@@ -80,7 +85,7 @@ export default function AdvancedOptions({ theme, setThemeVar }) {
             </label>
 
             <label className="advanced-label slider-label">
-              <span>Random seed (optional)</span>
+              <span>Random seed</span>
               <input
                 type="text"
                 value={theme['shapes-seed'] || ''}
