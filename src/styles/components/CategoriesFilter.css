@@ -13,3 +13,8 @@
 .categories-filter .category-list li {
   padding: var(--space-xs) 0;
 }
+
+.category-count {
+  font-size: 0.9rem;
+  color: var(--secondary-text-color);
+}

@@ -1,3 +1,4 @@
+//themeStore.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext(null);
@@ -6,6 +7,7 @@ const DEFAULT_THEME = {
   'app-bg': '#ffffff',
   'widget-bg': '#ffffff',
   'text-color': '#000000',
+  'secondary-text-color': '#666666',
   'muted': '#888888',
   'accent': '#2563eb',
   'border-color': 'rgb(0,0,0)',

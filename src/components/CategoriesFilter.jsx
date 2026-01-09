@@ -153,7 +153,7 @@ export default function CategoriesFilter({ mode = 'select' }) {
                 </span>
               </label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <span className="category-count" style={{ color: '#666', fontSize: '0.9rem' }}>
+                <span className="category-count" >
                   {counts[cat] || 0}
                 </span>
                 {control}

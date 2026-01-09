@@ -151,6 +151,7 @@ export default function ThemeSettings() {
             { key: 'app-bg', label: 'App background' },
             { key: 'widget-bg', label: 'Widget background' },
             { key: 'text-color', label: 'Main text color' },
+            { key: 'secondary-text-color', label: 'Secondary text color' },
             { key: 'border-color', label: 'Border color' },
             { key: 'tile-bg', label: 'Calendar tile background' },
             { key: 'tile-border', label: 'Calendar tile border' },
