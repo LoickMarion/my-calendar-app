@@ -33,6 +33,53 @@
   flex-wrap: wrap;
 }
 
+.import-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.import-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  max-width: 90vw;
+  background: var(--widget-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: var(--space-xs);
+  gap: 2px;
+}
+
+.import-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.import-menu-item:hover {
+  background: var(--tile-bg);
+}
+
+@media (max-width: 640px) {
+  .import-menu-dropdown {
+    left: auto;
+    right: 0;
+  }
+}
+
 .file-picker {
   display: flex;
   align-items: center;
@@ -81,5 +128,106 @@
   font-family: var(--font-family);
   font-size: 0.9rem;
   box-sizing: border-box;
+}
+
+/* Download CSV / Save to Drive row */
+.task-panel-actions-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.task-panel-actions-row .btn-small {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.task-panel-actions-status {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .task-panel-actions-row {
+    gap: var(--space-xs);
+  }
+
+  .task-panel-actions-row .btn-small {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Numeric goal section */
+.goal-section {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Repeat section */
+.repeat-section {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.weekday-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin: 0.5rem 0;
+}
+
+.weekday-toggle {
+  flex: 1 1 auto;
+  min-width: 2.5rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--tile-bg);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.weekday-toggle.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.repeat-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: 0.5rem;
+}
+
+.series-edit-actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.series-edit-actions .btn {
+  flex: 1 1 auto;
+}
+
+.form-error {
+  color: #c0392b;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .weekday-toggle {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.3rem;
+  }
 }
 

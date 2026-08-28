@@ -7,7 +7,7 @@ import CaseToggle from './CaseToggle';
 import FilterCompleted from './FilterCompleted';
 import JumpToToday from './JumpToToday';
 
-export default function NavigationBar({ mode, cycleMode, setCurrent, setSelectedDate }) {
+export default function NavigationBar({ mode, cycleMode, setCurrent, setSelectedDate, isSignedIn, accessToken }) {
   return (
     <header className="navigation-bar">
       <div className="nav-item">
@@ -16,8 +16,8 @@ export default function NavigationBar({ mode, cycleMode, setCurrent, setSelected
       <div className="nav-item"><FilterCompleted /></div>
       <div className="nav-item"><CaseToggle /></div>
       <div className="nav-item"><ModeToggle mode={mode} cycleMode={cycleMode} /></div>
-      <div className="nav-item"><ThemeSettings /></div>
-      <div className="nav-item"><ImportControls /></div>
+      <div className="nav-item"><ThemeSettings accessToken={accessToken} /></div>
+      <div className="nav-item"><ImportControls isSignedIn={isSignedIn} /></div>
     </header>
   );
 }

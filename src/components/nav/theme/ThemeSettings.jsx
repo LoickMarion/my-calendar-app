@@ -3,10 +3,11 @@ import { useThemeStore } from '../../../state/themeStore.jsx';
 import { useTaskStore } from '../../../state/taskStore/index.jsx';
 import AdvancedOptions from './AdvancedOptions.jsx';
 import { toLocalDateKey } from '../../../state/date.js';
+import { saveThemeToDrive } from '../../../data/googleDriveTheme.js';
 import CaseText from '../../CaseText.jsx';
 
 
-export default function ThemeSettings() {
+export default function ThemeSettings({ accessToken }) {
   const { theme, setThemeVar, resetDefaults } = useThemeStore();
   const { getCategories, getCategoryColor, setCategoryColor } = useTaskStore();
   const [open, setOpen] = useState(false);
@@ -88,6 +89,17 @@ export default function ThemeSettings() {
     return s;
   }
 
+  async function handleSaveToDrive() {
+    setMsg('Saving…');
+    try {
+      await saveThemeToDrive(accessToken, theme);
+      setMsg('Saved to Drive');
+    } catch (err) {
+      console.error(err);
+      setMsg('Failed to save to Drive: ' + err.message);
+    }
+  }
+
   return (
     <div className="theme-settings-container" style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
       <button className="btn" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
@@ -100,6 +112,14 @@ export default function ThemeSettings() {
           <div className="theme-settings-header-buttons">
             <button className="btn" onClick={resetDefaults} title="Reset to defaults">
               <CaseText>Reset</CaseText>
+            </button>
+            <button
+              className="btn"
+              onClick={handleSaveToDrive}
+              disabled={!accessToken}
+              title={accessToken ? undefined : 'Sign in with Google to save to Drive'}
+            >
+              <CaseText>Save to Drive</CaseText>
             </button>
             <button className="btn" onClick={() => setOpen(false)}>
               <CaseText>Close</CaseText>
@@ -161,7 +181,8 @@ export default function ThemeSettings() {
             { key: 'tile-highlight', label: 'Calendar tile highlight' },
             { key: 'checkbox-check', label: 'Checkbox check color' },
             { key: 'checkbox-bg', label: 'Checkbox background (checked)' },
-            { key: 'bullet-color', label: 'Bullet color (daily view)' }
+            { key: 'bullet-color', label: 'Bullet color (daily view)' },
+            { key: 'goal-progress-color', label: 'Goal progress bar color' }
           ].map((entry) => (
             <label key={entry.key} className="theme-color-row">
               <span><CaseText>{entry.label}</CaseText></span>

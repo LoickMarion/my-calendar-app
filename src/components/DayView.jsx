@@ -20,6 +20,7 @@ export default function DayView({ mode = 'select' }) {
   const allDone =
     tasks.length > 0 &&
     tasks.every(task => task.completed === true);
+  const completedCount = tasks.filter(task => task.completed === true).length;
 
   return (
     <aside className="day-view">
@@ -34,7 +35,7 @@ export default function DayView({ mode = 'select' }) {
       </h2>
 
       {/* ⭐ Trigger celebration when all tasks are complete */}
-      <CelebrationManager allDone={allDone} />
+      <CelebrationManager dateKey={dateKey} allDone={allDone} completedCount={completedCount} />
 
       {/* Render the tasks */}
       <TaskList tasks={tasks} dateKey={dateKey} mode={mode} />
