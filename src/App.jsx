@@ -9,7 +9,7 @@ import {
 } from '@dnd-kit/core';
 
 import { TaskProvider, useTaskStore } from './state/taskStore/index.jsx';
-import { ThemeProvider } from './state/themeStore.jsx';
+import { ThemeProvider, useThemeStore } from './state/themeStore.jsx';
 
 import NavigationBar from './components/nav/NavigationBar.jsx';
 import CalendarGrid from './components/CalendarGrid';
@@ -39,6 +39,11 @@ import './styles/components/themes/CustomBulletPoints.css';
 import './styles/components/themes/AnimationOptions.css';
 import './components/celebration/celebration.css'
 
+import { useGoogleLogin } from "@react-oauth/google"
+import { loadThemeFromDrive } from './data/googleDriveTheme.js';
+import { loadTasksFromDrive } from './data/googleDriveTasks.js';
+
+const DRIVE_FILE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
 function AppContent() {
   const [current, setCurrent] = useState(() => {
@@ -47,8 +52,39 @@ function AppContent() {
   });
 
   const [mode, setMode] = useState('select');
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [accessToken, setAccessToken] = useState(null);
 
-  const { selectedDate, setSelectedDate, getFilteredTasks, moveTaskToDate, moveTask } = useTaskStore();
+  const { selectedDate, setSelectedDate, getFilteredTasks, moveTaskToDate, moveTask, importTasks } = useTaskStore();
+  const { setThemeVar } = useThemeStore();
+
+  const signIn = useGoogleLogin({
+    flow: 'implicit',
+    scope: DRIVE_FILE_SCOPE,
+    onSuccess: async (tokenResponse) => {
+      setIsSignedIn(true);
+      setAccessToken(tokenResponse.access_token);
+
+      try {
+        const savedTheme = await loadThemeFromDrive(tokenResponse.access_token);
+        if (savedTheme) {
+          Object.entries(savedTheme).forEach(([key, value]) => setThemeVar(key, value));
+        }
+      } catch (err) {
+        console.error('Failed to auto-load theme from Drive', err);
+      }
+
+      try {
+        const savedTasks = await loadTasksFromDrive(tokenResponse.access_token);
+        if (savedTasks) {
+          importTasks(savedTasks, { replace: true });
+        }
+      } catch (err) {
+        console.error('Failed to auto-load tasks from Drive', err);
+      }
+    },
+    onError: () => console.log('Login failed'),
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -110,7 +146,15 @@ function AppContent() {
   }
 
   return (
+
     <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
+
+          {!isSignedIn && (
+            <button className="btn" type="button" onClick={() => signIn()}>
+              Sign in with Google
+            </button>
+          )}
+
       <div className="app-shell">
         <BackgroundShapes />
 
@@ -125,6 +169,8 @@ function AppContent() {
             cycleMode={cycleMode}
             setCurrent={setCurrent}
             setSelectedDate={setSelectedDate}
+            isSignedIn={isSignedIn}
+            accessToken={accessToken}
           />
 
           {/* THREE-COLUMN LAYOUT */}
@@ -133,7 +179,7 @@ function AppContent() {
             {/* LEFT SIDEBAR */}
             <aside className="sidebar-left">
               <CategoriesFilter mode={mode} />
-              <AddTaskPanel />
+              <AddTaskPanel accessToken={accessToken} />
             </aside>
 
             {/* MIDDLE COLUMN — calendar */}

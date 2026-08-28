@@ -75,8 +75,12 @@ const DEFAULT_THEME = {
   'text-case': 'title',
 
   //animation
-  'completion-animation': 'party',
+  'task-completion-animation': 'none',
+  'day-completion-animation': 'party',
   'last-celebrated-date': "",
+
+  /* Numeric goal tasks */
+  'goal-progress-color': '#2563eb',
 
 };
 
@@ -104,6 +108,10 @@ export function ThemeProvider({ children }) {
       const saved = localStorage.getItem('calendar_theme');
       if (saved) {
         const parsed = JSON.parse(saved);
+        // Migrate the old single 'completion-animation' key to 'day-completion-animation'
+        if (parsed['completion-animation'] !== undefined && parsed['day-completion-animation'] === undefined) {
+          parsed['day-completion-animation'] = parsed['completion-animation'];
+        }
         setTheme((prev) => ({ ...prev, ...parsed }));
         applyTheme({ ...DEFAULT_THEME, ...parsed });
       } else {

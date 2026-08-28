@@ -4,8 +4,19 @@ import CaseText from '../../CaseText.jsx';
 
 import CelebrationPreview from '../../celebration/CelebrationPreview.jsx';
 
+const ANIMATION_MODES = [
+  { value: 'none', label: 'None' },
+  { value: 'confetti', label: 'Confetti' },
+  { value: 'sparkle', label: 'Sparkle' },
+  { value: 'fireworks', label: 'Fireworks' },
+  { value: 'ribbon', label: 'Ribbon' },
+  { value: 'glow', label: 'Glow' },
+  { value: 'party', label: 'Party Mix' },
+];
+
 export default function AnimationOptions({ theme, setThemeVar }) {
-  const mode = theme['completion-animation'] || 'none';
+  const taskMode = theme['task-completion-animation'] || 'none';
+  const dayMode = theme['day-completion-animation'] || 'none';
   const [preview, setPreview] = useState(null);
 
   function playPreview(mode) {
@@ -15,27 +26,44 @@ export default function AnimationOptions({ theme, setThemeVar }) {
   }
 
   return (
-    <div className="theme-settings-row animation-options">
-      <span className="theme-settings-label">
-        <CaseText>Completion Animation</CaseText>
-      </span>
+    <>
+      <div className="theme-settings-row animation-options">
+        <span className="theme-settings-label">
+          <CaseText>Task Completion Animation</CaseText>
+        </span>
 
-      <div className="animation-options-controls">
-        <select
-          className="theme-select"
-          value={mode}
-          onChange={(e) => setThemeVar('completion-animation', e.target.value)}
-        >
-          <option value="none"><CaseText>None</CaseText></option>
-            <option value="party"><CaseText>Party Mix</CaseText></option>
-        </select>
+        <div className="animation-options-controls">
+          <select
+            className="theme-select"
+            value={taskMode}
+            onChange={(e) => setThemeVar('task-completion-animation', e.target.value)}
+          >
+            {ANIMATION_MODES.map(({ value, label }) => (
+              <option key={value} value={value}><CaseText>{label}</CaseText></option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-        {/* <button className="btn" onClick={() => playPreview(mode)}>
-          <CaseText>Test Animation</CaseText>
-        </button> */}
+      <div className="theme-settings-row animation-options">
+        <span className="theme-settings-label">
+          <CaseText>Day Completion Animation</CaseText>
+        </span>
+
+        <div className="animation-options-controls">
+          <select
+            className="theme-select"
+            value={dayMode}
+            onChange={(e) => setThemeVar('day-completion-animation', e.target.value)}
+          >
+            {ANIMATION_MODES.map(({ value, label }) => (
+              <option key={value} value={value}><CaseText>{label}</CaseText></option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {preview && <CelebrationPreview mode={preview} />}
-    </div>
+    </>
   );
 }

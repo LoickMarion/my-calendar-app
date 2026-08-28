@@ -3,7 +3,7 @@
  * Utility functions for managing tasks in the task store.
  */
 
-import { toLocalDateKey } from '../date.js';
+import { toLocalDateKey, parseLocalDateKey } from '../date.js';
 
 /** Normalize task ID by removing leading 'task__' if present */
 export function normalizeTaskId(taskId) {
@@ -40,6 +40,26 @@ export function toggleTaskComplete( setTasks, dateKey, taskId) {
     };
     const newArr = [...arr];
     newArr[index] = updatedTask;
+
+    return { ...prev, [dateKey]: newArr };
+  });
+}
+
+
+/** Set the logged value of a numeric-goal task; `completed` is always re-derived from it. */
+export function setTaskGoalValue(setTasks, dateKey, taskId, newValue) {
+  setTasks(prev => {
+    const arr = prev[dateKey] || [];
+    const groupIndex = Number(taskId.split('__')[3]);
+    const index = findIndexWithinGroup(arr, taskId.split('__')[2], groupIndex);
+    if (index === -1) return prev;
+
+    const task = arr[index];
+    if (task.goalTarget == null) return prev; // not a goal task, no-op
+
+    const clamped = Math.max(0, newValue);
+    const newArr = [...arr];
+    newArr[index] = { ...task, goalValue: clamped, completed: clamped >= task.goalTarget };
 
     return { ...prev, [dateKey]: newArr };
   });
