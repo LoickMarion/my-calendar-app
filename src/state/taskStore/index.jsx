@@ -66,6 +66,23 @@ export function TaskProvider({ children }) {
 
     importTasks: state.importTasks, // <-- updated
 
+    addRecurringTask: (startDateKey, endDateKey, weekdays, task) =>
+      taskActions.addRecurringTask(
+        state.tasks,
+        state.setTasks,
+        state.initializeCategories,
+        startDateKey,
+        endDateKey,
+        weekdays,
+        task
+      ),
+
+    deleteTaskSeries: (seriesId) =>
+      taskActions.deleteTaskSeries(state.tasks, state.setTasks, seriesId),
+
+    saveTaskSeriesEdits: (seriesId, updates) =>
+      taskActions.saveTaskSeriesEdits(state.tasks, state.setTasks, state.setEditingTask, seriesId, updates),
+
     // --- Category actions ---
     addCategory: cat =>
       categoryActions.addCategory(state.setEnabledCategories, state.setCategoryColors, cat),
@@ -118,6 +135,9 @@ export function TaskProvider({ children }) {
         dateKey,
         taskId
       ),
+
+    setTaskGoalValue: (dateKey, taskId, newValue) =>
+      taskUtils.setTaskGoalValue(state.setTasks, dateKey, taskId, newValue),
 
 
 

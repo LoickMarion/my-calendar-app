@@ -6,9 +6,10 @@ import { useDraggable } from '@dnd-kit/core';
 import { useTaskStore } from '../state/taskStore/index.jsx';
 import { useThemeStore } from '../state/themeStore.jsx';
 import { SVG_BULLETS } from './nav/theme/CustomBulletPointsSVGs.jsx';
+import { formatCompactNumber } from '../utils/formatNumber.js';
 
 export default function TaskItem({ task, id, mode = 'select' }) {
-  const { toggleTaskComplete, deleteTask, startEditTask } = useTaskStore();
+  const { toggleTaskComplete, deleteTask, startEditTask, deleteTaskSeries, setTaskGoalValue } = useTaskStore();
   const { theme } = useThemeStore();
 
   // ---------- Bullet component ----------
@@ -83,8 +84,36 @@ export default function TaskItem({ task, id, mode = 'select' }) {
     : undefined;
 
   // ---------- Action buttons ----------
+  const isGoalTask = task.goalTarget != null;
+
   let actionBox = null;
-  if (mode === 'select') {
+  if (mode === 'select' && isGoalTask) {
+    actionBox = (
+      <div className="task-goal-control" data-no-drag>
+        <button
+          type="button"
+          data-no-drag
+          onClick={() => setTaskGoalValue(dateKey, id, (task.goalValue || 0) - 1)}
+        >
+          −
+        </button>
+        <input
+          type="number"
+          className="task-goal-input"
+          data-no-drag
+          value={task.goalValue || 0}
+          onChange={(e) => setTaskGoalValue(dateKey, id, Number(e.target.value))}
+        />
+        <button
+          type="button"
+          data-no-drag
+          onClick={() => setTaskGoalValue(dateKey, id, (task.goalValue || 0) + 1)}
+        >
+          +
+        </button>
+      </div>
+    );
+  } else if (mode === 'select') {
     actionBox = (
       <label className="checkbox-wrapper">
         <input
@@ -98,14 +127,33 @@ export default function TaskItem({ task, id, mode = 'select' }) {
     );
   } else if (mode === 'delete') {
     actionBox = (
-      <button
-        type="button"
-        className="task-action-delete"
-        data-no-drag
-        onClick={() => deleteTask(dateKey, id)}
-      >
-        ✕
-      </button>
+      <>
+        <button
+          type="button"
+          className="task-action-delete"
+          data-no-drag
+          title="Delete this occurrence"
+          onClick={() => deleteTask(dateKey, id)}
+        >
+          ✕
+        </button>
+        {task.seriesId && (
+          <button
+            type="button"
+            className="task-action-delete-series"
+            data-no-drag
+            title="Delete entire series"
+            onClick={() => {
+              const confirmed = window.confirm(
+                'Delete this entire repeating series? All occurrences on every date will be removed. This cannot be undone.'
+              );
+              if (confirmed) deleteTaskSeries(task.seriesId);
+            }}
+          >
+            Delete series
+          </button>
+        )}
+      </>
     );
   } else if (mode === 'edit') {
     actionBox = (
@@ -142,6 +190,21 @@ export default function TaskItem({ task, id, mode = 'select' }) {
 
       {/* ROW 2 */}
       {task.description && <div className="task-description">{task.description}</div>}
+
+      {/* ROW 3 */}
+      {isGoalTask && (
+        <div className="task-goal-progress">
+          <div className="task-goal-progress-track">
+            <div
+              className="task-goal-progress-fill"
+              style={{ width: `${Math.min(100, ((task.goalValue || 0) / task.goalTarget) * 100)}%` }}
+            />
+          </div>
+          <span className="task-goal-progress-label">
+            {formatCompactNumber(task.goalValue || 0)} / {formatCompactNumber(task.goalTarget)}
+          </span>
+        </div>
+      )}
     </li>
   );
 }

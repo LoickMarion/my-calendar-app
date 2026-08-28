@@ -1,5 +1,6 @@
 // taskActions.js
 import { normalizeTaskId } from './taskUtils';
+import { generateOccurrenceDateKeys, clampEndDate } from './recurrence';
 
 /** Add a new task */
 export function addTask(
@@ -22,6 +23,11 @@ export function addTask(
         completed: false
     };
 
+    if (task.goalTarget != null) {
+      newTask.goalTarget = task.goalTarget;
+      newTask.goalValue = task.goalValue ?? 0;
+    }
+
 
   // Update tasks
   const updatedTasks = { ...tasks, [dateKey]: [...arr, newTask] };
@@ -30,6 +36,80 @@ export function addTask(
   // Update categories
   if (initializeCategories) initializeCategories(updatedTasks);
 
+}
+
+/** Create a recurring series: one materialized task per matching weekday between start/end. */
+export function addRecurringTask(
+  tasks,
+  setTasks,
+  initializeCategories,
+  startDateKey,
+  endDateKey,
+  weekdays,
+  task
+) {
+  const dateKeys = generateOccurrenceDateKeys(startDateKey, endDateKey, weekdays);
+  if (dateKeys.length === 0) return { seriesId: null, count: 0 };
+
+  const seriesId = crypto.randomUUID();
+  const recurrence = {
+    weekdays: [...weekdays].sort(),
+    startDate: startDateKey,
+    endDate: clampEndDate(startDateKey, endDateKey || startDateKey),
+  };
+  const category = task.category || 'Uncategorized';
+
+  const updatedTasks = { ...tasks };
+  for (const dateKey of dateKeys) {
+    const arr = updatedTasks[dateKey] || [];
+    const newTask = {
+      title: task.title || '',
+      description: task.description || task.text || '',
+      category,
+      completed: false,
+      seriesId,
+      recurrence,
+    };
+    if (task.goalTarget != null) {
+      newTask.goalTarget = task.goalTarget;
+      newTask.goalValue = 0;
+    }
+    updatedTasks[dateKey] = [...arr, newTask];
+  }
+
+  setTasks(updatedTasks);
+  if (initializeCategories) initializeCategories(updatedTasks);
+
+  return { seriesId, count: dateKeys.length };
+}
+
+/** Delete every occurrence across all dateKeys sharing seriesId. */
+export function deleteTaskSeries(tasks, setTasks, seriesId) {
+  if (!seriesId) return;
+
+  const updatedTasks = {};
+  for (const dateKey of Object.keys(tasks)) {
+    updatedTasks[dateKey] = (tasks[dateKey] || []).filter(t => t.seriesId !== seriesId);
+  }
+  setTasks(updatedTasks);
+}
+
+/**
+ * Apply title/description/category to every occurrence in the series.
+ * Never touches `completed` on any occurrence.
+ */
+export function saveTaskSeriesEdits(tasks, setTasks, setEditingTask, seriesId, updates) {
+  if (!seriesId) return;
+
+  const { completed, ...safeUpdates } = updates;
+  const updatedTasks = {};
+  for (const dateKey of Object.keys(tasks)) {
+    updatedTasks[dateKey] = (tasks[dateKey] || []).map(t =>
+      t.seriesId === seriesId ? { ...t, ...safeUpdates } : t
+    );
+  }
+  setTasks(updatedTasks);
+  setEditingTask(null);
 }
 
 /** Delete a task */

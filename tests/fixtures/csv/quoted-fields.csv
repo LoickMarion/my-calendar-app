@@ -1,0 +1,4 @@
+date,category,text,title,completed
+2026-08-28,Work,"Email Doe, Jane about the budget",,false
+2026-08-29,Home,"Buy ingredients: eggs, milk, flour",Grocery Run,false
+2026-08-30,Personal,"She said ""see you there""",Quote Test,true
