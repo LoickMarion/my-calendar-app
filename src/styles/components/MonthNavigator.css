@@ -14,4 +14,15 @@
   font-size: 1.6rem;
   position: relative;
   top: -6px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .month-navigator {
+    gap: var(--space-sm);
+  }
+
+  .month-label {
+    font-size: 1.15rem;
+  }
 }

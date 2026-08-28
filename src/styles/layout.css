@@ -6,6 +6,8 @@
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .app-content {
@@ -61,6 +63,24 @@
   .sidebar-left,
   .sidebar-right {
     width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: var(--space-sm);
+  }
+
+  .app-content {
+    gap: var(--space-md);
+  }
+
+  .app-layout {
+    gap: var(--space-md);
+  }
+
+  .app-header {
+    font-size: 1.15rem;
   }
 }
 
