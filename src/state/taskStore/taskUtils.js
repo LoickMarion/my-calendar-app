@@ -3,7 +3,7 @@
  * Utility functions for managing tasks in the task store.
  */
 
-import { toLocalDateKey } from '../date.js';
+import { toLocalDateKey, parseLocalDateKey } from '../date.js';
 
 /** Normalize task ID by removing leading 'task__' if present */
 export function normalizeTaskId(taskId) {

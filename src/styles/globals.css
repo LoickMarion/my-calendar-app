@@ -42,12 +42,24 @@
 }
 
 /* Reset / base styles */
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
+  width: 100%;
+  overflow-x: hidden;
   font-family: var(--font-family);
   background: var(--app-bg);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
 }
 
 ul {

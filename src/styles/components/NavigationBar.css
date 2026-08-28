@@ -5,18 +5,37 @@
   display: flex;
   align-items: center;
   justify-content: center; /* center the wrapper in nav bar */
+  flex-wrap: wrap;
   gap: 1rem;
   padding: 0.5rem;
-  padding-top: 1rem; 
+  padding-top: 1rem;
   background-color: var(--widget-bg); /* optional */
   border: 1px solid var(--border-color, #ccc);
   font-family: var(--font-family, system-ui);
   border-radius: var(--radius-md);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 
 .nav-items-wrapper {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 1rem; /* spacing between items */
+}
+
+.nav-item {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .navigation-bar {
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .nav-items-wrapper {
+    gap: 0.5rem;
+  }
 }

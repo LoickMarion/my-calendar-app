@@ -8,6 +8,7 @@
   top: 100%;
   right: 0;
   width: 360px;
+  max-width: calc(100vw - 2 * var(--space-lg));
   max-height: 75vh;
   overflow-y: auto;               /* allow scrolling */
   scrollbar-width: none;           /* Firefox */
@@ -33,6 +34,21 @@
   opacity: 1;
   pointer-events: auto;
   scroll-behavior: smooth; /* optional: smooth scrolling */
+}
+
+/* On narrow screens, anchoring to the trigger's right edge can push the
+   panel off-screen. Pin it to the viewport instead so it's always reachable. */
+@media (max-width: 640px) {
+  .theme-settings-panel {
+    position: fixed;
+    top: auto;
+    bottom: var(--space-lg);
+    left: var(--space-lg);
+    right: var(--space-lg);
+    width: auto;
+    max-width: none;
+    max-height: 70vh;
+  }
 }
 
 /* =========================

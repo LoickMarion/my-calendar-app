@@ -42,6 +42,10 @@
   cursor: pointer;
   box-sizing: border-box;
   min-height: 64px;
+  width: 100%;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
 }
 
 .calendar-tile:hover {
@@ -194,4 +198,35 @@
   align-items: center;
   justify-content: center;
   cursor: default;
+}
+
+/* Small screens: tighten up the grid so 7 columns stay comfortable */
+@media (max-width: 640px) {
+  .calendar-grid {
+    grid-auto-rows: minmax(48px, auto);
+    gap: 2px;
+    padding: var(--space-xs);
+  }
+
+  .calendar-row {
+    gap: 2px;
+  }
+
+  .calendar-tile {
+    padding: 4px;
+    min-height: 44px;
+    font-size: 0.8rem;
+  }
+
+  .calendar-header-cell {
+    font-size: 0.7rem;
+  }
+
+  .task-badge,
+  .task-complete-x {
+    right: 2px;
+    top: 2px;
+    font-size: 0.65rem;
+    padding: 1px 4px;
+  }
 }
