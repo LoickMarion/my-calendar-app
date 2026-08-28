@@ -1,0 +1,5 @@
+date,category,text,title,completed
+2026-08-28,Work,This row has a valid date,,false
+not-a-date,Work,This row should be skipped,,false
+,Home,This row has an empty date and should be skipped,,false
+2026-08-30,Personal,Another valid row,,false

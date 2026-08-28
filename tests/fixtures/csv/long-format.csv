@@ -1,0 +1,6 @@
+date,category,text,title,completed
+2026-08-28,Work,Finish quarterly report,Quarterly Report,false
+2026-08-28,Home,Water the plants,,false
+2026-08-29,Work,Review pull requests,,true
+2026-08-30,Personal,Call the dentist,Dentist,false
+2026-09-01,Work,Kickoff meeting for new project,Kickoff,false
