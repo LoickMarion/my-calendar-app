@@ -160,6 +160,10 @@ function AppContent() {
 
          <header className="app-header">
             <h1><CaseText>Pookie Calendar &lt;3</CaseText></h1>
+            <nav className="app-header-links">
+              <a href="/privacy-policy">Privacy Policy</a>
+              <a href="/terms-of-service">Terms of Service</a>
+            </nav>
           </header>
 
         <div className="app-content">
