@@ -1,5 +1,5 @@
 // App.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -44,6 +44,7 @@ import { loadThemeFromDrive } from './data/googleDriveTheme.js';
 import { loadTasksFromDrive } from './data/googleDriveTasks.js';
 
 const DRIVE_FILE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const AUTH_STORAGE_KEY = 'calendar_google_auth';
 
 function AppContent() {
   const [current, setCurrent] = useState(() => {
@@ -58,33 +59,79 @@ function AppContent() {
   const { selectedDate, setSelectedDate, getFilteredTasks, moveTaskToDate, moveTask, importTasks } = useTaskStore();
   const { setThemeVar } = useThemeStore();
 
+  const applyToken = useCallback(async (accessToken, expiresInSeconds) => {
+    setIsSignedIn(true);
+    setAccessToken(accessToken);
+
+    localStorage.setItem(
+      AUTH_STORAGE_KEY,
+      JSON.stringify({
+        accessToken,
+        expiresAt: Date.now() + expiresInSeconds * 1000,
+      })
+    );
+
+    try {
+      const savedTheme = await loadThemeFromDrive(accessToken);
+      if (savedTheme) {
+        Object.entries(savedTheme).forEach(([key, value]) => setThemeVar(key, value));
+      }
+    } catch (err) {
+      console.error('Failed to auto-load theme from Drive', err);
+    }
+
+    try {
+      const savedTasks = await loadTasksFromDrive(accessToken);
+      if (savedTasks) {
+        importTasks(savedTasks, { replace: true });
+      }
+    } catch (err) {
+      console.error('Failed to auto-load tasks from Drive', err);
+    }
+  }, [setThemeVar, importTasks]);
+
   const signIn = useGoogleLogin({
     flow: 'implicit',
     scope: DRIVE_FILE_SCOPE,
-    onSuccess: async (tokenResponse) => {
-      setIsSignedIn(true);
-      setAccessToken(tokenResponse.access_token);
-
-      try {
-        const savedTheme = await loadThemeFromDrive(tokenResponse.access_token);
-        if (savedTheme) {
-          Object.entries(savedTheme).forEach(([key, value]) => setThemeVar(key, value));
-        }
-      } catch (err) {
-        console.error('Failed to auto-load theme from Drive', err);
-      }
-
-      try {
-        const savedTasks = await loadTasksFromDrive(tokenResponse.access_token);
-        if (savedTasks) {
-          importTasks(savedTasks, { replace: true });
-        }
-      } catch (err) {
-        console.error('Failed to auto-load tasks from Drive', err);
-      }
+    onSuccess: (tokenResponse) => {
+      applyToken(tokenResponse.access_token, tokenResponse.expires_in);
     },
-    onError: () => console.log('Login failed'),
+    onError: () => {
+      console.log('Login failed');
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    },
   });
+
+  const signOut = useCallback(() => {
+    if (accessToken) {
+      fetch(`https://oauth2.googleapis.com/revoke?token=${accessToken}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      }).catch(() => {});
+    }
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    setIsSignedIn(false);
+    setAccessToken(null);
+  }, [accessToken]);
+
+  // On mount: reuse a still-valid stored token, or silently try to
+  // refresh an expired one (no popup) before falling back to signed-out.
+  useEffect(() => {
+    let stored;
+    try {
+      stored = JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
+    } catch {
+      stored = null;
+    }
+    if (!stored) return;
+
+    if (stored.expiresAt > Date.now()) {
+      applyToken(stored.accessToken, (stored.expiresAt - Date.now()) / 1000);
+    } else {
+      signIn({ prompt: '' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -149,7 +196,11 @@ function AppContent() {
 
     <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
 
-          {!isSignedIn && (
+          {isSignedIn ? (
+            <button className="btn" type="button" onClick={signOut}>
+              Sign out
+            </button>
+          ) : (
             <button className="btn" type="button" onClick={() => signIn()}>
               Sign in with Google
             </button>
