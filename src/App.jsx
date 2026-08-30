@@ -196,22 +196,21 @@ function AppContent() {
 
     <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragEnd={handleDragEnd}>
 
-          {isSignedIn ? (
-            <button className="btn" type="button" onClick={signOut}>
-              Sign out
-            </button>
-          ) : (
-            <button className="btn" type="button" onClick={() => signIn()}>
-              Sign in with Google
-            </button>
-          )}
-
       <div className="app-shell">
         <BackgroundShapes />
 
          <header className="app-header">
             <h1><CaseText>Pookie Calendar &lt;3</CaseText></h1>
             <nav className="app-header-links">
+              {isSignedIn ? (
+                <button className="link-button" type="button" onClick={signOut}>
+                  Sign out
+                </button>
+              ) : (
+                <button className="link-button" type="button" onClick={() => signIn()}>
+                  Sign in with Google
+                </button>
+              )}
               <a href="/privacy-policy">Privacy Policy</a>
               <a href="/terms-of-service">Terms of Service</a>
             </nav>
